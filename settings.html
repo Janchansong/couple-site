@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -6,6 +6,7 @@
   <script src="js/background-boot.js"></script>
   <script src="js/auth-config.js"></script>
   <script src="js/auth-boot.js"></script>
+  <style>html.auth-locked body>:not(#auth-gate){display:none!important}html.auth-locked #auth-gate{display:flex!important}</style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="数据备份 — 保护菜单、日历和照片数据">
   <title>数据备份 · 我们俩</title>
@@ -15,6 +16,23 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="settings-page">
+  <div id="auth-gate" class="auth-gate" hidden>
+    <div class="auth-card">
+      <p class="auth-emoji">💕</p>
+      <h1 class="auth-title">我们俩</h1>
+      <p class="auth-subtitle">请输入家庭密码进入</p>
+      <form class="auth-form" id="auth-form">
+        <input type="password" id="auth-password" class="auth-input" placeholder="家庭密码" autocomplete="current-password" required>
+        <label class="auth-remember">
+          <input type="checkbox" id="auth-remember" checked>
+          记住我（30 天内免登录）
+        </label>
+        <p class="auth-error" id="auth-error" hidden>密码不对，再试一次</p>
+        <button type="submit" class="btn btn-primary auth-submit">进入小站</button>
+      </form>
+    </div>
+  </div>
+  <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
       <a href="index.html" class="logo">我们俩</a>
@@ -202,9 +220,7 @@
       </div>
     </div>
   </footer>
-
-  <script src="js/auth.js"></script>
-  <script src="js/backup.js"></script>
+<script src="js/backup.js"></script>
   <script src="js/sync-config.js"></script>
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>

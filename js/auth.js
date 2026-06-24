@@ -54,50 +54,35 @@
   function unlockPage() {
     document.documentElement.classList.remove("auth-locked");
     const gate = document.getElementById("auth-gate");
-    if (gate) gate.remove();
+    if (gate) gate.hidden = true;
   }
 
   function showLoginGate() {
-    if (document.getElementById("auth-gate")) return;
-
-    const gate = document.createElement("div");
-    gate.id = "auth-gate";
-    gate.className = "auth-gate";
-    gate.innerHTML = `
-      <div class="auth-card">
-        <p class="auth-emoji">💕</p>
-        <h1 class="auth-title">我们俩</h1>
-        <p class="auth-subtitle">请输入家庭密码进入</p>
-        <form class="auth-form" id="auth-form">
-          <input type="password" id="auth-password" class="auth-input" placeholder="家庭密码" autocomplete="current-password" required>
-          <label class="auth-remember">
-            <input type="checkbox" id="auth-remember" checked>
-            记住我（30 天内免登录）
-          </label>
-          <p class="auth-error" id="auth-error" hidden>密码不对，再试一次</p>
-          <button type="submit" class="btn btn-primary auth-submit">进入小站</button>
-        </form>
-      </div>
-    `;
-
-    document.body.appendChild(gate);
+    document.documentElement.classList.add("auth-locked");
+    const gate = document.getElementById("auth-gate");
+    if (!gate) return;
+    gate.hidden = false;
 
     const form = document.getElementById("auth-form");
     const input = document.getElementById("auth-password");
     const error = document.getElementById("auth-error");
     const rememberEl = document.getElementById("auth-remember");
 
-    form?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const pwd = input?.value || "";
-      if (login(pwd, rememberEl?.checked)) {
-        unlockPage();
-      } else if (error) {
-        error.hidden = false;
-        input?.focus();
-        input?.select();
-      }
-    });
+    if (form && !form.dataset.bound) {
+      form.dataset.bound = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const pwd = input?.value || "";
+        if (login(pwd, rememberEl?.checked)) {
+          if (error) error.hidden = true;
+          unlockPage();
+        } else if (error) {
+          error.hidden = false;
+          input?.focus();
+          input?.select();
+        }
+      });
+    }
 
     input?.focus();
   }
@@ -132,9 +117,5 @@
     getPasswordHint: () => (getPassword() ? "已设置" : "未设置"),
   };
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  init();
 })();
