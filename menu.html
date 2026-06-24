@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="老婆点菜 — 今天想吃什么，点这里">
+  <title>老婆点菜 · 我们俩</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="menu-page">
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">我们俩</a>
+      <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="blog.html">博客</a></li>
+        <li><a href="projects.html">作品</a></li>
+        <li><a href="menu.html" class="active">点菜</a></li>
+        <li><a href="calendar.html">日历</a></li>
+        <li><a href="photos.html">相册</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header container">
+      <h1>老婆点菜 🍳</h1>
+      <p>今天想吃什么？选好提交，老公收到就做。</p>
+    </div>
+
+    <div class="container menu-view-tabs" role="tablist">
+      <button class="menu-tab active" data-view="order" role="tab" aria-selected="true">我要点菜</button>
+      <button class="menu-tab" data-view="kitchen" role="tab" aria-selected="false">
+        厨房清单
+        <span class="pending-badge" id="pending-badge" hidden>0</span>
+      </button>
+      <button class="menu-tab" data-view="manage" role="tab" aria-selected="false">管理菜单</button>
+    </div>
+
+    <!-- 点菜视图 -->
+    <section class="section menu-section" id="order-view">
+      <div class="container menu-layout">
+        <div class="menu-main">
+          <div class="menu-categories" id="menu-categories"></div>
+          <div class="menu-grid" id="menu-grid"></div>
+
+          <div class="custom-dish">
+            <h3>临时加一道？</h3>
+            <p class="custom-dish-desc">只加入今天的订单，不会保存到菜单。想永久添加请去「管理菜单」。</p>
+            <div class="custom-dish-row">
+              <input type="text" id="custom-dish-input" placeholder="输入菜名，比如：外卖披萨" maxlength="30">
+              <button type="button" class="btn btn-secondary" id="custom-dish-add">加入订单</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="menu-cart" id="menu-cart">
+          <div class="menu-cart-inner">
+            <h2>今日菜单</h2>
+            <p class="cart-hint">选好后提交给老公 👇</p>
+            <ul class="cart-list" id="cart-list">
+              <li class="cart-empty">还没有选菜哦</li>
+            </ul>
+            <div class="form-group">
+              <label for="order-note">备注</label>
+              <textarea id="order-note" placeholder="比如：少辣、多放葱、今天想吃清淡的…" rows="2"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" id="submit-order" disabled>提交给老公</button>
+            <button type="button" class="btn btn-secondary btn-block" id="clear-cart">清空菜单</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 厨房清单视图 -->
+    <section class="section menu-section hidden" id="kitchen-view">
+      <div class="container">
+        <div class="kitchen-header">
+          <h2>待做清单</h2>
+          <p>老婆点的菜会出现在这里。做完了点「已完成」。</p>
+        </div>
+        <div class="kitchen-list" id="kitchen-list">
+          <p class="kitchen-empty">暂无待做订单，等老婆点菜吧 🍽️</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 管理菜单视图 -->
+    <section class="section menu-section hidden" id="manage-view">
+      <div class="container manage-menu">
+        <div class="manage-form-card">
+          <h2>添加新菜</h2>
+          <p class="manage-hint">添加到菜单后，以后点菜可以直接选。</p>
+          <form id="add-menu-form">
+            <div class="manage-form-row">
+              <div class="form-group">
+                <label for="new-dish-name">菜名</label>
+                <input type="text" id="new-dish-name" required placeholder="比如：糖醋里脊" maxlength="20">
+              </div>
+              <div class="form-group form-group-emoji">
+                <label for="new-dish-emoji">图标</label>
+                <input type="text" id="new-dish-emoji" placeholder="🍖" maxlength="4" value="🍽️">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-dish-category">分类</label>
+              <select id="new-dish-category" required></select>
+            </div>
+            <div class="emoji-picker" id="emoji-picker" aria-label="快速选择图标"></div>
+            <button type="submit" class="btn btn-primary">添加到菜单</button>
+          </form>
+        </div>
+
+        <div class="manage-list-card">
+          <h2>我们加的菜</h2>
+          <p class="manage-hint">自己添加的菜品，不需要了可以删除。</p>
+          <ul class="manage-dish-list" id="custom-menu-list">
+            <li class="manage-empty">还没有自定义菜品，上方添加第一道吧</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-bar" id="cart-bar" hidden>
+    <button type="button" class="cart-bar-btn" id="cart-bar-toggle">
+      <span>已选 <strong id="cart-bar-count">0</strong> 道菜</span>
+      <span class="cart-bar-action">查看菜单 →</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
+      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">小红书</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/backup.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>

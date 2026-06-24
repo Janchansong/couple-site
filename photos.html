@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="我们的相册 — 上传和珍藏两个人的照片">
+  <title>相册 · 我们俩</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="photos-page">
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">我们俩</a>
+      <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="blog.html">博客</a></li>
+        <li><a href="projects.html">作品</a></li>
+        <li><a href="menu.html">点菜</a></li>
+        <li><a href="calendar.html">日历</a></li>
+        <li><a href="photos.html" class="active">相册</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header container">
+      <h1>我们的相册 📷</h1>
+      <p>上传照片，把一起度过的瞬间留在这里。</p>
+    </div>
+
+    <section class="section photos-section">
+      <div class="container">
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="photo-input" accept="image/*" multiple hidden>
+          <div class="upload-zone-content">
+            <span class="upload-icon">📸</span>
+            <p><strong>点击或拖拽照片到这里</strong></p>
+            <p class="upload-hint">支持 JPG、PNG、GIF、WebP，可多选</p>
+            <button type="button" class="btn btn-primary" id="upload-btn">选择照片</button>
+          </div>
+        </div>
+
+        <div class="upload-options" id="upload-options">
+          <div class="form-group">
+            <label for="upload-album">相册分类</label>
+            <select id="upload-album">
+              <option value="daily">日常</option>
+              <option value="travel">旅行</option>
+              <option value="food">美食</option>
+              <option value="anniversary">纪念日</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="upload-caption">统一说明（可选）</label>
+            <input type="text" id="upload-caption" placeholder="比如：2025 京都之旅" maxlength="50">
+          </div>
+        </div>
+
+        <div class="upload-progress hidden" id="upload-progress">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <p id="progress-text">上传中…</p>
+        </div>
+
+        <div class="photo-filters" id="photo-filters">
+          <button class="filter-btn active" data-album="all">全部</button>
+          <button class="filter-btn" data-album="daily">日常</button>
+          <button class="filter-btn" data-album="travel">旅行</button>
+          <button class="filter-btn" data-album="food">美食</button>
+          <button class="filter-btn" data-album="anniversary">纪念日</button>
+          <button class="filter-btn" data-album="other">其他</button>
+        </div>
+
+        <p class="photo-count" id="photo-count"></p>
+
+        <div class="photo-grid" id="photo-grid">
+          <p class="photo-grid-empty">还没有照片，上传第一张吧</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="photo-lightbox" id="photo-lightbox">
+    <div class="lightbox-inner">
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="关闭">×</button>
+      <button type="button" class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="上一张">‹</button>
+      <button type="button" class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="下一张">›</button>
+      <img id="lightbox-img" src="" alt="">
+      <div class="lightbox-info">
+        <p id="lightbox-caption"></p>
+        <p id="lightbox-meta"></p>
+        <button type="button" class="btn-text btn-text-danger" id="lightbox-delete">删除这张照片</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
+      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">小红书</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/backup.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/photos.js"></script>
+</body>
+</html>

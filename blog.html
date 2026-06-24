@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="博客 — 小明和小雨的共同小站">
+  <title>博客 · 我们俩</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">我们俩</a>
+      <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="blog.html" class="active">博客</a></li>
+        <li><a href="projects.html">作品</a></li>
+        <li><a href="menu.html">点菜</a></li>
+        <li><a href="calendar.html">日历</a></li>
+        <li><a href="photos.html">相册</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header container">
+      <h1>博客</h1>
+      <p>各自的文章、共同的记录。标注了作者，方便你知道是谁写的。</p>
+    </div>
+
+    <section class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="blog-filters" role="group" aria-label="按作者筛选">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="him">小明</button>
+          <button class="filter-btn" data-filter="her">小雨</button>
+          <button class="filter-btn" data-filter="us">我们俩</button>
+        </div>
+
+        <div class="blog-list">
+          <article class="blog-item" data-author="him">
+            <time datetime="2026-06-20">2026.06.20</time>
+            <div>
+              <div class="blog-item-meta">
+                <span class="author-badge author-him">小明</span>
+              </div>
+              <h2><a href="posts/start-writing.html">为什么我们开始写博客</a></h2>
+              <p>两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
+              <div class="tags">
+                <span class="tag">思考</span>
+                <span class="tag">写作</span>
+              </div>
+            </div>
+          </article>
+          <article class="blog-item" data-author="her">
+            <time datetime="2026-06-15">2026.06.15</time>
+            <div>
+              <div class="blog-item-meta">
+                <span class="author-badge author-her">小雨</span>
+              </div>
+              <h2><a href="posts/minimal-design.html">极简设计的力量</a></h2>
+              <p>从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
+              <div class="tags">
+                <span class="tag">设计</span>
+                <span class="tag">生活</span>
+              </div>
+            </div>
+          </article>
+          <article class="blog-item" data-author="us">
+            <time datetime="2026-06-08">2026.06.08</time>
+            <div>
+              <div class="blog-item-meta">
+                <span class="author-badge author-us">我们俩</span>
+              </div>
+              <h2><a href="posts/learning-in-public.html">两个人一起学东西</a></h2>
+              <p>他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
+              <div class="tags">
+                <span class="tag">学习</span>
+                <span class="tag">成长</span>
+              </div>
+            </div>
+          </article>
+          <article class="blog-item" data-author="her">
+            <time datetime="2026-05-28">2026.05.28</time>
+            <div>
+              <div class="blog-item-meta">
+                <span class="author-badge author-her">小雨</span>
+              </div>
+              <h2><a href="posts/creative-routine.html">建立创作习惯</a></h2>
+              <p>周末固定留出两小时各自创作——她画画，他写代码，互不打扰但彼此在场。</p>
+              <div class="tags">
+                <span class="tag">习惯</span>
+                <span class="tag">创作</span>
+              </div>
+            </div>
+          </article>
+          <article class="blog-item" data-author="us">
+            <time datetime="2026-05-15">2026.05.15</time>
+            <div>
+              <div class="blog-item-meta">
+                <span class="author-badge author-us">我们俩</span>
+              </div>
+              <h2><a href="posts/read-more.html">今年读过的五本好书</a></h2>
+              <p>一人挑几本，凑成一份书单。有些书我们各读各的，有些是一起讨论着读完的。</p>
+              <div class="tags">
+                <span class="tag">阅读</span>
+                <span class="tag">推荐</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
+      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">小红书</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/backup.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

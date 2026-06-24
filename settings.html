@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="数据备份 — 保护菜单、日历和照片数据">
+  <title>数据备份 · 我们俩</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="settings-page">
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">我们俩</a>
+      <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="blog.html">博客</a></li>
+        <li><a href="projects.html">作品</a></li>
+        <li><a href="menu.html">点菜</a></li>
+        <li><a href="calendar.html">日历</a></li>
+        <li><a href="photos.html">相册</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header container">
+      <h1>数据备份 🛡️</h1>
+      <p>自动备份 + 手动导出，让菜单、日历和照片更安全。</p>
+    </div>
+
+    <section class="section settings-section">
+      <div class="container settings-layout">
+        <div class="settings-card">
+          <h2>存储状态</h2>
+          <ul class="stats-list" id="stats-list">
+            <li>加载中…</li>
+          </ul>
+          <p class="settings-meta" id="backup-meta"></p>
+        </div>
+
+        <div class="settings-card">
+          <h2>稳定性保障</h2>
+          <ul class="stability-features">
+            <li>✅ 每次修改后 <strong>自动备份</strong> 菜单和日历</li>
+            <li>✅ 照片在浏览器内 <strong>双份存储</strong>，主数据丢失可恢复</li>
+            <li>✅ 打开网站时 <strong>自动检查</strong> 并修复异常数据</li>
+            <li>✅ 支持 <strong>导出完整备份</strong> 到文件，换设备也能恢复</li>
+          </ul>
+        </div>
+
+        <div class="settings-card settings-card-wide">
+          <h2>导出备份</h2>
+          <p>下载一个 JSON 文件，包含所有特殊日期、自定义菜单、订单和照片。建议每月导出一次，存到网盘或 U 盘。</p>
+          <button type="button" class="btn btn-primary" id="btn-export">导出完整备份</button>
+        </div>
+
+        <div class="settings-card settings-card-wide">
+          <h2>恢复备份</h2>
+          <p>从之前导出的 JSON 文件恢复。<strong>会覆盖当前所有数据</strong>，请确认后再操作。</p>
+          <input type="file" id="import-file" accept=".json,application/json" hidden>
+          <button type="button" class="btn btn-secondary" id="btn-import">选择备份文件恢复</button>
+        </div>
+
+        <div class="settings-card">
+          <h2>立即备份</h2>
+          <p>手动触发一次自动备份，通常不需要，系统已在后台自动执行。</p>
+          <button type="button" class="btn btn-secondary" id="btn-auto-backup">立即自动备份</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
+      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">小红书</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/backup.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

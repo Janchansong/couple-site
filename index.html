@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="我们俩的小站 — 记录生活、分享想法、留下足迹">
+  <title>我们俩 · 共同的小站</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">我们俩</a>
+      <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">首页</a></li>
+        <li><a href="blog.html">博客</a></li>
+        <li><a href="projects.html">作品</a></li>
+        <li><a href="menu.html">点菜</a></li>
+        <li><a href="calendar.html">日历</a></li>
+        <li><a href="photos.html">相册</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero hero-couple">
+      <div class="container hero-inner">
+        <p class="hero-label">你好，我们是</p>
+        <div class="couple-avatars" aria-hidden="true">
+          <div class="avatar avatar-him">明</div>
+          <span class="avatar-connector">&</span>
+          <div class="avatar avatar-her">雨</div>
+        </div>
+        <h1 class="hero-title">小明 <span class="amp">&</span> 小雨</h1>
+        <p class="hero-subtitle">一起写代码 · 一起做饭 · 一起把日子过成喜欢的样子</p>
+        <p class="hero-desc">这是专属于我们两个人的小站。在这里记录旅行、生活琐事、各自的工作学习，以及那些值得留住的瞬间。</p>
+        <div class="hero-actions">
+          <a href="menu.html" class="btn btn-primary">老婆点菜 🍳</a>
+          <a href="about.html" class="btn btn-secondary">认识我们</a>
+          <a href="blog.html" class="btn btn-secondary">读读博客</a>
+        </div>
+      </div>
+      <div class="hero-decoration" aria-hidden="true"></div>
+      <div class="hero-decoration hero-decoration-2" aria-hidden="true"></div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="stability-banner">
+          <p>菜单、日历、照片已开启<strong>自动备份</strong>。建议每月导出一次完整备份，存到网盘更安心。</p>
+          <a href="settings.html" class="btn btn-secondary btn-sm">去备份</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>最新文章</h2>
+          <a href="blog.html" class="link-arrow">查看全部 →</a>
+        </div>
+        <div class="post-grid">
+          <article class="post-card">
+            <div class="post-card-top">
+              <time datetime="2026-06-20">2026年6月20日</time>
+              <span class="author-badge author-him">小明</span>
+            </div>
+            <h3><a href="posts/start-writing.html">为什么我们开始写博客</a></h3>
+            <p>两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
+            <div class="tags">
+              <span class="tag">思考</span>
+              <span class="tag">写作</span>
+            </div>
+          </article>
+          <article class="post-card">
+            <div class="post-card-top">
+              <time datetime="2026-06-15">2026年6月15日</time>
+              <span class="author-badge author-her">小雨</span>
+            </div>
+            <h3><a href="posts/minimal-design.html">极简设计的力量</a></h3>
+            <p>从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
+            <div class="tags">
+              <span class="tag">设计</span>
+              <span class="tag">生活</span>
+            </div>
+          </article>
+          <article class="post-card">
+            <div class="post-card-top">
+              <time datetime="2026-06-08">2026年6月8日</time>
+              <span class="author-badge author-us">我们俩</span>
+            </div>
+            <h3><a href="posts/learning-in-public.html">两个人一起学东西</a></h3>
+            <p>他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
+            <div class="tags">
+              <span class="tag">学习</span>
+              <span class="tag">成长</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2>一起做的事</h2>
+          <a href="projects.html" class="link-arrow">查看全部 →</a>
+        </div>
+        <div class="project-grid">
+          <a href="projects.html#project-1" class="project-card">
+            <div class="project-thumb" style="--hue: 25"></div>
+            <div class="project-info">
+              <h3>我们的小家</h3>
+              <p>从毛坯到入住，一起选材料、刷墙、挑家具，把租来的房子变成家</p>
+            </div>
+          </a>
+          <a href="projects.html#project-2" class="project-card">
+            <div class="project-thumb" style="--hue: 340"></div>
+            <div class="project-info">
+              <h3>2025 京都之旅</h3>
+              <p>第一次一起出国旅行，寺庙、拉面、和意外迷路的小巷</p>
+            </div>
+          </a>
+          <a href="projects.html#project-3" class="project-card">
+            <div class="project-thumb" style="--hue: 160"></div>
+            <div class="project-info">
+              <h3>这个网站</h3>
+              <p>他写代码、她定风格，周末一起搭出来的线上小窝</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section story-banner">
+      <div class="container story-inner">
+        <div class="story-text">
+          <h2>关于「我们俩」</h2>
+          <p>2019 年相识，2022 年结婚。一个喜欢折腾技术，一个热爱设计和美食。平时各忙各的工作，周末一起做饭、散步、规划下一次旅行。</p>
+          <p>建这个网站，是想给未来的自己留一份可以翻看的记忆——不用多精彩，真实就好。</p>
+          <a href="about.html" class="link-arrow">了解更多 →</a>
+        </div>
+        <div class="story-stats">
+          <div class="stat">
+            <span class="stat-num">7+</span>
+            <span class="stat-label">年在一起</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">12</span>
+            <span class="stat-label">篇博客</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">5</span>
+            <span class="stat-label">次旅行</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section home-photos-section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2>最近的照片</h2>
+          <a href="photos.html" class="link-arrow">查看相册 →</a>
+        </div>
+        <div class="home-photos-grid" id="home-photos-grid">
+          <p class="home-photos-empty">加载中…</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section home-dates-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>即将到来的日子</h2>
+          <a href="calendar.html" class="link-arrow">查看日历 →</a>
+        </div>
+        <ul class="home-dates-list" id="home-dates-list">
+          <li class="home-dates-empty">加载中…</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section newsletter">
+      <div class="container newsletter-inner">
+        <h2>订阅我们的动态</h2>
+        <p>新文章、旅行照片或生活碎片，不定期分享，不会打扰你。</p>
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" placeholder="你的邮箱地址" required aria-label="邮箱地址">
+          <button type="submit" class="btn btn-primary">订阅</button>
+        </form>
+        <p class="form-message" id="newsletter-message" hidden>感谢订阅！我们会与你保持联系。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
+      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">小红书</a>
+        <a href="#">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/backup.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/photos.js"></script>
+</body>
+</html>
