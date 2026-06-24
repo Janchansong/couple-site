@@ -131,6 +131,53 @@
     };
   }
 
+  function payloadTimestamp(local) {
+    const stamps = [
+      local?.siteContent?.updatedAt,
+      local?.homeProfile?.updatedAt,
+      ...(local?.menuOrders || []).map((o) => o.updatedAt || o.completedAt || o.createdAt),
+      ...(local?.dates || []).map((d) => d.updatedAt || d.createdAt),
+      ...(local?.menuCustom || []).map((m) => m.updatedAt || m.createdAt),
+    ]
+      .filter(Boolean)
+      .map((t) => new Date(t).getTime())
+      .filter((t) => !Number.isNaN(t));
+    if (stamps.length) return new Date(Math.max(...stamps)).toISOString();
+    return new Date(0).toISOString();
+  }
+
+  function shouldApplyRemote(remote) {
+    if (!remote?.updatedAt) return false;
+
+    const meta = getMeta();
+    const lastApplied = meta.lastAppliedRemote ? new Date(meta.lastAppliedRemote).getTime() : 0;
+    const remoteAt = new Date(remote.updatedAt).getTime();
+
+    if (remote.deviceId && remote.deviceId !== getDeviceId()) return true;
+    if (remoteAt > lastApplied) return true;
+
+    if (Array.isArray(remote.menuOrders) && remote.menuOrders.some((o) => o.status === "pending")) {
+      return true;
+    }
+
+    const local = window.CoupleBackup?.readLocalData?.() || {};
+    const localContent = local.siteContent || window.CoupleSiteContent?.load?.() || {};
+    const remoteContentAt = remote.siteContent?.updatedAt
+      ? new Date(remote.siteContent.updatedAt).getTime()
+      : 0;
+    const localContentAt = localContent.updatedAt ? new Date(localContent.updatedAt).getTime() : 0;
+    if (remoteContentAt > localContentAt) return true;
+
+    const localHero = local.homeProfile || window.CoupleHomeProfile?.load?.() || {};
+    const remoteHeroAt = remote.homeProfile?.updatedAt
+      ? new Date(remote.homeProfile.updatedAt).getTime()
+      : 0;
+    const localHeroAt = localHero.updatedAt ? new Date(localHero.updatedAt).getTime() : 0;
+    if (remoteHeroAt > localHeroAt) return true;
+
+    return false;
+  }
+
   function buildPayload() {
     const local = window.CoupleBackup?.readLocalData?.() || {
       dates: [],
@@ -141,10 +188,17 @@
     };
     const siteContent = local.siteContent || window.CoupleSiteContent?.load?.() || null;
     const hero = siteContent?.hero || local.homeProfile || window.CoupleHomeProfile?.load?.() || null;
-    const payloadContent = siteContent ? { ...siteContent, hero } : hero ? { hero, updatedAt: hero.updatedAt } : null;
+    const payloadContent = siteContent ? { ...siteContent, hero } : hero ? { hero, updatedAt: hero.updatedAt || new Date().toISOString() } : null;
+    const stamp = payloadTimestamp({
+      siteContent: payloadContent,
+      homeProfile: hero,
+      menuOrders: local.menuOrders,
+      dates: local.dates,
+      menuCustom: local.menuCustom,
+    });
     return {
       version: 1,
-      updatedAt: new Date().toISOString(),
+      updatedAt: stamp,
       deviceId: getDeviceId(),
       dates: local.dates || [],
       menuCustom: local.menuCustom || [],
@@ -225,15 +279,7 @@
         return false;
       }
 
-      const hasRemoteOrders =
-        Array.isArray(remote.menuOrders) &&
-        remote.menuOrders.some((o) => o.status === "pending");
-      const remoteNewer =
-        new Date(remote.updatedAt).getTime() >
-        new Date(buildPayload().updatedAt).getTime();
-      const fromOther = remote.deviceId && remote.deviceId !== getDeviceId();
-
-      if (fromOther || remoteNewer || hasRemoteOrders) {
+      if (shouldApplyRemote(remote)) {
         const changed = applyRemote(remote);
         setMeta({
           status: "idle",
@@ -272,6 +318,14 @@
             updatedAt: new Date().toISOString(),
             deviceId: getDeviceId(),
           };
+          const mergedLocal = {
+            siteContent: payload.siteContent,
+            homeProfile: payload.homeProfile,
+            menuOrders: payload.menuOrders,
+            dates: payload.dates,
+            menuCustom: payload.menuCustom,
+          };
+          payload.updatedAt = payloadTimestamp(mergedLocal);
         }
       } catch {
         /* 远端暂无数据 */

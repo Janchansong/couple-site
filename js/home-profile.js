@@ -38,7 +38,7 @@
     }
     apply(data);
     window.CoupleBackup?.scheduleAutoBackup?.();
-    window.CoupleSync?.schedulePush?.();
+    window.CoupleSync?.push?.();
     window.dispatchEvent(new CustomEvent("couple-home-profile-updated", { detail: data }));
     return data;
   }

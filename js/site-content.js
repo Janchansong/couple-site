@@ -69,10 +69,14 @@
 
   function persist(data) {
     data.updatedAt = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     const hero = getNested(data, "hero");
-    if (hero?.nameHim) {
-      localStorage.setItem(LEGACY_HERO_KEY, JSON.stringify(hero));
+    if (hero && typeof hero === "object") {
+      setNested(data, "hero", { ...hero, updatedAt: data.updatedAt });
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const heroSaved = getNested(data, "hero");
+    if (heroSaved?.nameHim) {
+      localStorage.setItem(LEGACY_HERO_KEY, JSON.stringify(heroSaved));
     }
   }
 
@@ -127,7 +131,7 @@
     persist(merged);
     apply(scope);
     window.CoupleBackup?.scheduleAutoBackup?.();
-    window.CoupleSync?.schedulePush?.();
+    window.CoupleSync?.push?.();
     window.dispatchEvent(new CustomEvent("couple-site-content-updated", { detail: merged }));
     window.dispatchEvent(new CustomEvent("couple-home-profile-updated"));
     return merged;
@@ -153,6 +157,22 @@
     applyHero,
   };
 
-  apply();
+  async function bootstrap() {
+    apply();
+    if (window.CoupleSync?.isEnabled?.()) {
+      try {
+        await CoupleSync.pull();
+      } catch {
+        /* 离线时仍显示本机内容 */
+      }
+    }
+    apply();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  } else {
+    bootstrap();
+  }
   window.addEventListener("couple-cloud-synced", () => apply());
 })();
