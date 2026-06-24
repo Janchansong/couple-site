@@ -1,6 +1,7 @@
 (function () {
   const ROOM_KEY = "couple-sync-room";
   const URL_KEY = "couple-sync-url";
+  const FIREBASE_KEY = "couple-sync-firebase";
   const META_KEY = "couple-sync-meta";
   const DEVICE_KEY = "couple-sync-device-id";
 
@@ -26,24 +27,38 @@
     return id;
   }
 
+  function getBuiltIn() {
+    return window.CoupleSyncConfig || {};
+  }
+
   function applyBuiltInConfig() {
-    const cfg = window.CoupleSyncConfig;
-    if (!cfg?.enabled) return;
+    const cfg = getBuiltIn();
+    if (!cfg.enabled) return;
     if (cfg.room) localStorage.setItem(ROOM_KEY, cfg.room);
     if (cfg.syncUrl) localStorage.setItem(URL_KEY, cfg.syncUrl.replace(/\/$/, ""));
+    if (cfg.firebaseUrl) localStorage.setItem(FIREBASE_KEY, cfg.firebaseUrl.replace(/\/$/, ""));
   }
 
   function getConfig() {
-    const cfg = window.CoupleSyncConfig || {};
+    const cfg = getBuiltIn();
     return {
       room: (localStorage.getItem(ROOM_KEY) || cfg.room || "").trim(),
       url: (localStorage.getItem(URL_KEY) || cfg.syncUrl || "").trim().replace(/\/$/, ""),
+      firebase: (localStorage.getItem(FIREBASE_KEY) || cfg.firebaseUrl || "").trim().replace(/\/$/, ""),
     };
   }
 
-  function setConfig(room, url) {
+  function getProvider() {
+    const { firebase, url } = getConfig();
+    if (firebase.length > 12) return "firebase";
+    if (url.length > 8) return "rest";
+    return "none";
+  }
+
+  function setConfig(room, url, firebase) {
     if (room != null) localStorage.setItem(ROOM_KEY, room.trim());
     if (url != null) localStorage.setItem(URL_KEY, url.trim().replace(/\/$/, ""));
+    if (firebase != null) localStorage.setItem(FIREBASE_KEY, firebase.trim().replace(/\/$/, ""));
     restart();
     window.dispatchEvent(new CustomEvent("couple-sync-config-changed"));
   }
@@ -65,8 +80,8 @@
   }
 
   function isEnabled() {
-    const { room, url } = getConfig();
-    return room.length >= 4 && url.length > 8;
+    const { room } = getConfig();
+    return room.length >= 4 && getProvider() !== "none";
   }
 
   function mergeById(localArr, remoteArr) {
@@ -117,23 +132,64 @@
     return true;
   }
 
-  async function pull() {
-    if (!isEnabled() || pushing) return false;
-    const { room, url } = getConfig();
-    setMeta({ status: "pulling" });
-    try {
-      const res = await fetch(`${url}/${encodeURIComponent(room)}`, {
-        method: "GET",
-        cache: "no-store",
-      });
+  function firebaseEndpoint(room) {
+    const { firebase } = getConfig();
+    return `${firebase}/couple/${encodeURIComponent(room)}.json`;
+  }
+
+  function restEndpoint(room, method) {
+    const { url } = getConfig();
+    return `${url}/${encodeURIComponent(room)}`;
+  }
+
+  async function fetchRemote() {
+    const { room } = getConfig();
+    const provider = getProvider();
+
+    if (provider === "firebase") {
+      const res = await fetch(firebaseEndpoint(room), { cache: "no-store" });
       if (!res.ok) throw new Error(`拉取失败 (${res.status})`);
       const remote = await res.json();
+      return remote && typeof remote === "object" ? remote : null;
+    }
+
+    const res = await fetch(restEndpoint(room), { method: "GET", cache: "no-store" });
+    if (!res.ok) throw new Error(`拉取失败 (${res.status})`);
+    return await res.json();
+  }
+
+  async function uploadRemote(payload) {
+    const { room } = getConfig();
+    const provider = getProvider();
+
+    if (provider === "firebase") {
+      const res = await fetch(firebaseEndpoint(room), {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`上传失败 (${res.status})`);
+      return;
+    }
+
+    const res = await fetch(restEndpoint(room), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`上传失败 (${res.status})`);
+  }
+
+  async function pull() {
+    if (!isEnabled() || pushing) return false;
+    setMeta({ status: "pulling" });
+    try {
+      const remote = await fetchRemote();
       if (!remote?.updatedAt) {
         setMeta({ status: "idle", lastPull: new Date().toISOString(), lastError: null });
         return false;
       }
 
-      const local = window.CoupleBackup?.readLocalData?.() || {};
       const hasRemoteOrders =
         Array.isArray(remote.menuOrders) &&
         remote.menuOrders.some((o) => o.status === "pending");
@@ -166,7 +222,6 @@
 
   async function push() {
     if (!isEnabled()) return false;
-    const { room, url } = getConfig();
     pushing = true;
     setMeta({ status: "pushing" });
     try {
@@ -174,28 +229,20 @@
       let payload = buildPayload();
 
       try {
-        const res = await fetch(`${url}/${encodeURIComponent(room)}`, { cache: "no-store" });
-        if (res.ok) {
-          const remote = await res.json();
-          if (remote?.updatedAt) {
-            payload = {
-              ...mergeData(local, remote),
-              version: 1,
-              updatedAt: new Date().toISOString(),
-              deviceId: getDeviceId(),
-            };
-          }
+        const remote = await fetchRemote();
+        if (remote?.updatedAt) {
+          payload = {
+            ...mergeData(local, remote),
+            version: 1,
+            updatedAt: new Date().toISOString(),
+            deviceId: getDeviceId(),
+          };
         }
       } catch {
-        /* 远端暂无数据，直接上传本地 */
+        /* 远端暂无数据 */
       }
 
-      const putRes = await fetch(`${url}/${encodeURIComponent(room)}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!putRes.ok) throw new Error(`上传失败 (${putRes.status})`);
+      await uploadRemote(payload);
 
       window.CoupleBackup?.writeLocalData?.({
         dates: payload.dates,
@@ -264,6 +311,7 @@
     getConfig,
     setConfig,
     getMeta,
+    getProvider,
     isEnabled,
     pull,
     push,

@@ -81,12 +81,17 @@
     if (!el || !window.CoupleSync) return;
     const meta = CoupleSync.getMeta();
     const { room, url } = CoupleSync.getConfig();
-    if (!room || !url) {
-      el.innerHTML = '⚠️ <strong>云同步未连接</strong> — 你和老婆的数据各自存在自己手机里，点菜不会互通。请双击运行项目里的 <code>deploy-sync.bat</code>（约 3 分钟，只需做一次）。';
+    if (!CoupleSync.isEnabled()) {
+      el.innerHTML = '⚠️ <strong>云同步未连接</strong> — 老婆点的菜你看不到。请双击运行 <code>一键开启同步.bat</code>（约 3 分钟，只需做一次）。';
       el.className = "sync-status sync-status-error";
       return;
     }
-    const parts = [`同步码：${room}`, `服务器：${url}`];
+    const parts = [`同步码：${room}`];
+    if (CoupleSync.getProvider?.() === "firebase") {
+      parts.push("方式：Firebase 云同步");
+    } else {
+      parts.push(`服务器：${url}`);
+    }
     if (meta.lastPush) parts.push(`上次上传：${formatTime(meta.lastPush)}`);
     if (meta.lastPull) parts.push(`上次拉取：${formatTime(meta.lastPull)}`);
     if (meta.status === "error" && meta.lastError) {
