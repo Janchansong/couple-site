@@ -61,9 +61,15 @@
     }
   }
 
-  function saveOrders(orders) {
+  function saveOrders(orders, options = {}) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
     window.CoupleBackup?.scheduleAutoBackup();
+    window.dispatchEvent(new CustomEvent("couple-menu-orders-updated"));
+    if (options.syncNow) {
+      window.CoupleSync?.push?.();
+    } else {
+      window.CoupleSync?.schedulePush?.();
+    }
   }
 
   function showToast(msg) {
@@ -361,10 +367,11 @@
       note: noteEl?.value.trim() || "",
       status: "pending",
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     orders.unshift(order);
-    saveOrders(orders);
+    saveOrders(orders, { syncNow: true });
 
     cart = [];
     if (noteEl) noteEl.value = "";
@@ -374,7 +381,37 @@
     renderKitchen();
     updatePendingBadge();
     showToast("已提交！老公去厨房啦 🍳");
-    window.CoupleSync?.push?.();
+  }
+
+  function markOrderDone(orderId, btn) {
+    const orders = loadOrders();
+    const target = orders.find((o) => o.id === orderId);
+    if (!target || target.status === "done") return;
+
+    const card = btn?.closest?.(".kitchen-order");
+    if (btn) {
+      btn.disabled = true;
+      btn.classList.add("is-busy");
+      btn.textContent = "处理中…";
+    }
+    if (card) card.classList.add("kitchen-order-finishing");
+
+    target.status = "done";
+    target.completedAt = new Date().toISOString();
+    target.updatedAt = target.completedAt;
+    saveOrders(orders, { syncNow: true });
+
+    const finish = () => {
+      renderKitchen();
+      updatePendingBadge();
+      showToast("搞定！老婆会开心的 😊");
+    };
+
+    if (card) {
+      setTimeout(finish, 220);
+    } else {
+      finish();
+    }
   }
 
   function formatTime(iso) {
@@ -403,7 +440,7 @@
         <article class="kitchen-order">
           <div class="kitchen-order-head">
             <time>${formatTime(order.createdAt)}</time>
-            <button type="button" class="btn btn-primary btn-sm" data-done="${order.id}">已完成 ✓</button>
+            <button type="button" class="btn btn-primary btn-sm kitchen-done-btn" data-done="${order.id}">已完成 ✓</button>
           </div>
           <ul class="kitchen-items">
             ${order.items
@@ -418,19 +455,37 @@
       )
       .join("");
 
-    el.querySelectorAll("[data-done]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const orders = loadOrders();
-        const target = orders.find((o) => o.id === btn.dataset.done);
-        if (target) {
-          target.status = "done";
-          saveOrders(orders);
-          renderKitchen();
-          updatePendingBadge();
-          showToast("搞定！老婆会开心的 😊");
-        }
-      });
+  }
+
+  function initKitchenList() {
+    const el = document.getElementById("kitchen-list");
+    if (!el || el.dataset.kitchenBound) return;
+    el.dataset.kitchenBound = "1";
+
+    el.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-done]");
+      if (!btn || btn.disabled) return;
+      e.preventDefault();
+      markOrderDone(btn.dataset.done, btn);
     });
+  }
+
+  let kitchenPollTimer = null;
+
+  function startKitchenPoll() {
+    stopKitchenPoll();
+    if (!window.CoupleSync?.isEnabled?.()) return;
+    window.CoupleSync.pull?.();
+    kitchenPollTimer = setInterval(() => {
+      window.CoupleSync?.pull?.();
+    }, 2000);
+  }
+
+  function stopKitchenPoll() {
+    if (kitchenPollTimer) {
+      clearInterval(kitchenPollTimer);
+      kitchenPollTimer = null;
+    }
   }
 
   function updatePendingBadge() {
@@ -458,8 +513,10 @@
         kitchenView?.classList.toggle("hidden", view !== "kitchen");
         manageView?.classList.toggle("hidden", view !== "manage");
         if (view === "kitchen") {
-          window.CoupleSync?.pull?.();
+          startKitchenPoll();
           renderKitchen();
+        } else {
+          stopKitchenPoll();
         }
         if (view === "manage") renderManageList();
       });
@@ -507,11 +564,26 @@
   updatePendingBadge();
   initViewTabs();
   initEvents();
+  initKitchenList();
 
   window.addEventListener("couple-cloud-synced", () => {
     renderKitchen();
     renderManageList();
     updatePendingBadge();
+  });
+
+  window.addEventListener("couple-menu-orders-updated", () => {
+    renderKitchen();
+    updatePendingBadge();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    const kitchenView = document.getElementById("kitchen-view");
+    if (document.visibilityState === "visible" && kitchenView && !kitchenView.classList.contains("hidden")) {
+      window.CoupleSync?.pull?.();
+      renderKitchen();
+      updatePendingBadge();
+    }
   });
 
   function updateSyncBanner() {

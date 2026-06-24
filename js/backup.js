@@ -124,6 +124,7 @@
     }
     if (Array.isArray(data.menuOrders)) {
       localStorage.setItem(STORAGE_KEYS.menuOrders, JSON.stringify(data.menuOrders));
+      window.dispatchEvent(new CustomEvent("couple-menu-orders-updated"));
     }
     if (data.homeProfile && typeof data.homeProfile === "object") {
       localStorage.setItem(STORAGE_KEYS.homeProfile, JSON.stringify(data.homeProfile));

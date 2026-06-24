@@ -86,13 +86,26 @@
 
   function mergeById(localArr, remoteArr) {
     const map = new Map();
+
+    function ts(item) {
+      return new Date(item.updatedAt || item.completedAt || item.createdAt || 0).getTime();
+    }
+
+    function pickNewer(prev, item) {
+      const t = ts(item);
+      const pt = ts(prev);
+      if (t > pt) return item;
+      if (t < pt) return prev;
+      if (item.status === "done" && prev.status !== "done") return item;
+      if (prev.status === "done" && item.status !== "done") return prev;
+      return item;
+    }
+
     const all = [...(localArr || []), ...(remoteArr || [])];
     for (const item of all) {
       if (!item?.id) continue;
       const prev = map.get(item.id);
-      const t = new Date(item.updatedAt || item.createdAt || 0).getTime();
-      const pt = prev ? new Date(prev.updatedAt || prev.createdAt || 0).getTime() : 0;
-      if (!prev || t >= pt) map.set(item.id, item);
+      map.set(item.id, prev ? pickNewer(prev, item) : item);
     }
     return [...map.values()];
   }

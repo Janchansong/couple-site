@@ -1554,6 +1554,28 @@ img { max-width: 100%; display: block; }
   color: var(--text-muted);
 }
 
+.kitchen-done-btn {
+  min-height: 44px;
+  min-width: 7.5rem;
+  padding: 0.55rem 1rem;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.kitchen-done-btn.is-busy {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.kitchen-order-finishing {
+  opacity: 0;
+  transform: translateX(16px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+}
+
 .kitchen-items {
   list-style: none;
 }
