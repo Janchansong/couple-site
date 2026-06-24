@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <script src="js/mobile-boot.js"></script>
+  <script src="js/background-boot.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="数据备份 — 保护菜单、日历和照片数据">
   <title>数据备份 · 我们俩</title>
@@ -78,6 +79,35 @@
           <h2>立即备份</h2>
           <p>手动触发一次自动备份，通常不需要，系统已在后台自动执行。</p>
           <button type="button" class="btn btn-secondary" id="btn-auto-backup">立即自动备份</button>
+        </div>
+
+        <div class="settings-card settings-card-wide">
+          <h2>网页背景 🎨</h2>
+          <p>给全站换背景，支持预设、纯色和上传照片。设置会保存在本机浏览器。</p>
+          <div class="bg-settings" id="bg-settings">
+            <div class="bg-preview" id="bg-preview" aria-hidden="true"></div>
+            <p class="settings-meta">预设风格</p>
+            <div class="bg-presets" id="bg-presets"></div>
+            <div class="bg-row">
+              <label for="bg-color">自定义颜色</label>
+              <input type="color" id="bg-color" value="#faf8f5">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-bg-color">应用颜色</button>
+            </div>
+            <div class="bg-row">
+              <label for="bg-image">上传图片</label>
+              <input type="file" id="bg-image" accept="image/*" hidden>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-bg-upload">选择图片</button>
+            </div>
+            <div class="bg-row">
+              <label for="bg-overlay">遮罩浓度</label>
+              <input type="range" id="bg-overlay" min="0" max="80" value="42">
+              <span class="bg-overlay-val" id="bg-overlay-val">42%</span>
+            </div>
+            <div class="bg-actions">
+              <button type="button" class="btn btn-primary" id="btn-bg-save">保存背景</button>
+              <button type="button" class="btn btn-secondary" id="btn-bg-reset">恢复默认</button>
+            </div>
+          </div>
         </div>
 
         <div class="settings-card settings-card-wide sync-card">
@@ -156,6 +186,7 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/background.js"></script>
   <script src="js/settings.js"></script>
 </body>
 </html>

@@ -153,7 +153,102 @@
     showToast("收到对方更新");
   });
 
+  let bgDraft = CoupleBackground?.load?.() || { mode: "default", overlay: 0.42 };
+
+  function renderBgPreview() {
+    const preview = document.getElementById("bg-preview");
+    if (!preview || !window.CoupleBackground) return;
+    const style = CoupleBackground.getPreviewStyle(bgDraft);
+    Object.assign(preview.style, style);
+    const overlay = document.getElementById("bg-overlay");
+    const overlayVal = document.getElementById("bg-overlay-val");
+    const pct = Math.round((bgDraft.overlay ?? 0.42) * 100);
+    if (overlay) overlay.value = String(pct);
+    if (overlayVal) overlayVal.textContent = pct + "%";
+    document.querySelectorAll(".bg-preset-btn").forEach((btn) => {
+      btn.classList.toggle("active", bgDraft.mode === "preset" && bgDraft.preset === btn.dataset.preset);
+    });
+  }
+
+  function initBackgroundUI() {
+    const presetsEl = document.getElementById("bg-presets");
+    if (!presetsEl || !window.CoupleBackground) return;
+
+    presetsEl.innerHTML = CoupleBackground.PRESETS.map(
+      (p) =>
+        `<button type="button" class="bg-preset-btn" data-preset="${p.id}">
+          <span class="bg-preset-swatch" style="background:${p.swatch}"></span>
+          ${p.label}
+        </button>`
+    ).join("");
+
+    presetsEl.querySelectorAll(".bg-preset-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        bgDraft = { mode: "preset", preset: btn.dataset.preset, overlay: bgDraft.overlay ?? 0.42 };
+        CoupleBackground.apply(bgDraft);
+        renderBgPreview();
+      });
+    });
+
+    document.getElementById("bg-overlay")?.addEventListener("input", (e) => {
+      const pct = Number(e.target.value);
+      bgDraft.overlay = pct / 100;
+      document.getElementById("bg-overlay-val").textContent = pct + "%";
+      CoupleBackground.apply(bgDraft);
+      renderBgPreview();
+    });
+
+    document.getElementById("btn-bg-color")?.addEventListener("click", () => {
+      const color = document.getElementById("bg-color")?.value;
+      if (!color) return;
+      bgDraft = { mode: "color", color, overlay: bgDraft.overlay ?? 0.42 };
+      CoupleBackground.apply(bgDraft);
+      renderBgPreview();
+    });
+
+    document.getElementById("btn-bg-upload")?.addEventListener("click", () => {
+      document.getElementById("bg-image")?.click();
+    });
+
+    document.getElementById("bg-image")?.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        showToast("正在处理图片…");
+        const dataUrl = await CoupleBackground.compressImage(file, 1600, 0.72);
+        bgDraft = { mode: "image", image: dataUrl, overlay: bgDraft.overlay ?? 0.42 };
+        CoupleBackground.apply(bgDraft);
+        renderBgPreview();
+        showToast("图片已加载，记得点保存");
+      } catch {
+        showToast("图片处理失败");
+      }
+      e.target.value = "";
+    });
+
+    document.getElementById("btn-bg-save")?.addEventListener("click", () => {
+      CoupleBackground.save(bgDraft);
+      showToast("背景已保存");
+    });
+
+    document.getElementById("btn-bg-reset")?.addEventListener("click", () => {
+      bgDraft = { mode: "default", overlay: 0.42 };
+      CoupleBackground.save(bgDraft);
+      renderBgPreview();
+      showToast("已恢复默认背景");
+    });
+
+    const saved = CoupleBackground.load();
+    if (saved.color) {
+      const colorInput = document.getElementById("bg-color");
+      if (colorInput) colorInput.value = saved.color;
+    }
+    bgDraft = { ...saved };
+    renderBgPreview();
+  }
+
   renderStats();
   loadSyncForm();
+  initBackgroundUI();
   window.addEventListener("couple-backup-updated", renderStats);
 })();
