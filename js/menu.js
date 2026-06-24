@@ -374,6 +374,7 @@
     renderKitchen();
     updatePendingBadge();
     showToast("已提交！老公去厨房啦 🍳");
+    window.CoupleSync?.push?.();
   }
 
   function formatTime(iso) {
@@ -456,7 +457,10 @@
         orderView?.classList.toggle("hidden", view !== "order");
         kitchenView?.classList.toggle("hidden", view !== "kitchen");
         manageView?.classList.toggle("hidden", view !== "manage");
-        if (view === "kitchen") renderKitchen();
+        if (view === "kitchen") {
+          window.CoupleSync?.pull?.();
+          renderKitchen();
+        }
         if (view === "manage") renderManageList();
       });
     });

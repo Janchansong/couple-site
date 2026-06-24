@@ -26,10 +26,18 @@
     return id;
   }
 
+  function applyBuiltInConfig() {
+    const cfg = window.CoupleSyncConfig;
+    if (!cfg?.enabled) return;
+    if (cfg.room) localStorage.setItem(ROOM_KEY, cfg.room);
+    if (cfg.syncUrl) localStorage.setItem(URL_KEY, cfg.syncUrl.replace(/\/$/, ""));
+  }
+
   function getConfig() {
+    const cfg = window.CoupleSyncConfig || {};
     return {
-      room: (localStorage.getItem(ROOM_KEY) || "").trim(),
-      url: (localStorage.getItem(URL_KEY) || "").trim().replace(/\/$/, ""),
+      room: (localStorage.getItem(ROOM_KEY) || cfg.room || "").trim(),
+      url: (localStorage.getItem(URL_KEY) || cfg.syncUrl || "").trim().replace(/\/$/, ""),
     };
   }
 
@@ -61,6 +69,27 @@
     return room.length >= 4 && url.length > 8;
   }
 
+  function mergeById(localArr, remoteArr) {
+    const map = new Map();
+    const all = [...(localArr || []), ...(remoteArr || [])];
+    for (const item of all) {
+      if (!item?.id) continue;
+      const prev = map.get(item.id);
+      const t = new Date(item.updatedAt || item.createdAt || 0).getTime();
+      const pt = prev ? new Date(prev.updatedAt || prev.createdAt || 0).getTime() : 0;
+      if (!prev || t >= pt) map.set(item.id, item);
+    }
+    return [...map.values()];
+  }
+
+  function mergeData(local, remote) {
+    return {
+      dates: mergeById(local.dates, remote.dates),
+      menuCustom: mergeById(local.menuCustom, remote.menuCustom),
+      menuOrders: mergeById(local.menuOrders, remote.menuOrders),
+    };
+  }
+
   function buildPayload() {
     const local = window.CoupleBackup?.readLocalData?.() || {
       dates: [],
@@ -79,11 +108,9 @@
 
   function applyRemote(remote) {
     if (!remote || !window.CoupleBackup?.writeLocalData) return false;
-    window.CoupleBackup.writeLocalData({
-      dates: Array.isArray(remote.dates) ? remote.dates : [],
-      menuCustom: Array.isArray(remote.menuCustom) ? remote.menuCustom : [],
-      menuOrders: Array.isArray(remote.menuOrders) ? remote.menuOrders : [],
-    });
+    const local = window.CoupleBackup.readLocalData();
+    const merged = mergeData(local, remote);
+    window.CoupleBackup.writeLocalData(merged);
     window.CoupleBackup.scheduleAutoBackup?.();
     window.dispatchEvent(new CustomEvent("couple-dates-updated"));
     window.dispatchEvent(new CustomEvent("couple-cloud-synced"));
@@ -105,34 +132,27 @@
         setMeta({ status: "idle", lastPull: new Date().toISOString(), lastError: null });
         return false;
       }
-      const meta = getMeta();
-      const localPayload = buildPayload();
-      const remoteTime = new Date(remote.updatedAt).getTime();
-      const localTime = new Date(localPayload.updatedAt).getTime();
-      const lastPullTime = meta.lastAppliedRemote
-        ? new Date(meta.lastAppliedRemote).getTime()
-        : 0;
 
-      if (remoteTime > lastPullTime && remote.deviceId !== getDeviceId()) {
-        applyRemote(remote);
+      const local = window.CoupleBackup?.readLocalData?.() || {};
+      const hasRemoteOrders =
+        Array.isArray(remote.menuOrders) &&
+        remote.menuOrders.some((o) => o.status === "pending");
+      const remoteNewer =
+        new Date(remote.updatedAt).getTime() >
+        new Date(buildPayload().updatedAt).getTime();
+      const fromOther = remote.deviceId && remote.deviceId !== getDeviceId();
+
+      if (fromOther || remoteNewer || hasRemoteOrders) {
+        const changed = applyRemote(remote);
         setMeta({
           status: "idle",
           lastPull: new Date().toISOString(),
           lastAppliedRemote: remote.updatedAt,
           lastError: null,
         });
-        return true;
+        return changed;
       }
-      if (remoteTime > localTime && remote.deviceId !== getDeviceId()) {
-        applyRemote(remote);
-        setMeta({
-          status: "idle",
-          lastPull: new Date().toISOString(),
-          lastAppliedRemote: remote.updatedAt,
-          lastError: null,
-        });
-        return true;
-      }
+
       setMeta({ status: "idle", lastPull: new Date().toISOString(), lastError: null });
       return false;
     } catch (err) {
@@ -150,13 +170,39 @@
     pushing = true;
     setMeta({ status: "pushing" });
     try {
-      const payload = buildPayload();
-      const res = await fetch(`${url}/${encodeURIComponent(room)}`, {
+      const local = window.CoupleBackup?.readLocalData?.() || {};
+      let payload = buildPayload();
+
+      try {
+        const res = await fetch(`${url}/${encodeURIComponent(room)}`, { cache: "no-store" });
+        if (res.ok) {
+          const remote = await res.json();
+          if (remote?.updatedAt) {
+            payload = {
+              ...mergeData(local, remote),
+              version: 1,
+              updatedAt: new Date().toISOString(),
+              deviceId: getDeviceId(),
+            };
+          }
+        }
+      } catch {
+        /* 远端暂无数据，直接上传本地 */
+      }
+
+      const putRes = await fetch(`${url}/${encodeURIComponent(room)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(`上传失败 (${res.status})`);
+      if (!putRes.ok) throw new Error(`上传失败 (${putRes.status})`);
+
+      window.CoupleBackup?.writeLocalData?.({
+        dates: payload.dates,
+        menuCustom: payload.menuCustom,
+        menuOrders: payload.menuOrders,
+      });
+
       setMeta({
         status: "idle",
         lastPush: new Date().toISOString(),
@@ -180,7 +226,7 @@
     clearTimeout(pushTimer);
     pushTimer = setTimeout(() => {
       push();
-    }, 1200);
+    }, 600);
   }
 
   function generateRoomCode() {
@@ -201,10 +247,11 @@
     pull();
     pollTimer = setInterval(() => {
       pull();
-    }, 8000);
+    }, 3000);
   }
 
   function init() {
+    applyBuiltInConfig();
     window.addEventListener("couple-backup-updated", schedulePush);
     window.addEventListener("couple-data-recovered", schedulePush);
     document.addEventListener("visibilitychange", () => {
