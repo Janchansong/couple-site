@@ -35,7 +35,7 @@
   <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
-      <a href="index.html" class="logo">我们俩</a>
+      <a href="index.html" class="logo" data-cms="global.siteName">我们俩</a>
       <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -57,88 +57,88 @@
   </header>
 
   <main>
-    <div class="page-header container">
-      <h1>博客</h1>
-      <p>各自的文章、共同的记录。标注了作者，方便你知道是谁写的。</p>
+    <div class="page-header container" data-edit-section="页面标题">
+      <h1 data-cms="blog.title">博客</h1>
+      <p data-cms="blog.subtitle">各自的文章、共同的记录。标注了作者，方便你知道是谁写的。</p>
     </div>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
         <div class="blog-filters" role="group" aria-label="按作者筛选">
-          <button class="filter-btn active" data-filter="all">全部</button>
-          <button class="filter-btn" data-filter="him">小明</button>
-          <button class="filter-btn" data-filter="her">小雨</button>
-          <button class="filter-btn" data-filter="us">我们俩</button>
+          <button class="filter-btn active" data-filter="all" data-cms="blog.filterAll">全部</button>
+          <button class="filter-btn" data-filter="him" data-cms="blog.filterHim">小明</button>
+          <button class="filter-btn" data-filter="her" data-cms="blog.filterHer">小雨</button>
+          <button class="filter-btn" data-filter="us" data-cms="blog.filterUs">我们俩</button>
         </div>
 
-        <div class="blog-list">
+        <div class="blog-list" data-edit-section="文章列表">
           <article class="blog-item" data-author="him">
-            <time datetime="2026-06-20">2026.06.20</time>
+            <time datetime="2026-06-20" data-cms="blog.items.0.date">2026.06.20</time>
             <div>
               <div class="blog-item-meta">
-                <span class="author-badge author-him">小明</span>
+                <span class="author-badge author-him" data-cms="blog.items.0.author">小明</span>
               </div>
-              <h2><a href="posts/start-writing.html">为什么我们开始写博客</a></h2>
-              <p>两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
+              <h2><a href="posts/start-writing.html" data-cms="blog.items.0.title">为什么我们开始写博客</a></h2>
+              <p data-cms="blog.items.0.excerpt">两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
               <div class="tags">
-                <span class="tag">思考</span>
-                <span class="tag">写作</span>
+                <span class="tag" data-cms="blog.items.0.tag1">思考</span>
+                <span class="tag" data-cms="blog.items.0.tag2">写作</span>
               </div>
             </div>
           </article>
           <article class="blog-item" data-author="her">
-            <time datetime="2026-06-15">2026.06.15</time>
+            <time datetime="2026-06-15" data-cms="blog.items.1.date">2026.06.15</time>
             <div>
               <div class="blog-item-meta">
-                <span class="author-badge author-her">小雨</span>
+                <span class="author-badge author-her" data-cms="blog.items.1.author">小雨</span>
               </div>
-              <h2><a href="posts/minimal-design.html">极简设计的力量</a></h2>
-              <p>从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
+              <h2><a href="posts/minimal-design.html" data-cms="blog.items.1.title">极简设计的力量</a></h2>
+              <p data-cms="blog.items.1.excerpt">从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
               <div class="tags">
-                <span class="tag">设计</span>
-                <span class="tag">生活</span>
+                <span class="tag" data-cms="blog.items.1.tag1">设计</span>
+                <span class="tag" data-cms="blog.items.1.tag2">生活</span>
               </div>
             </div>
           </article>
           <article class="blog-item" data-author="us">
-            <time datetime="2026-06-08">2026.06.08</time>
+            <time datetime="2026-06-08" data-cms="blog.items.2.date">2026.06.08</time>
             <div>
               <div class="blog-item-meta">
-                <span class="author-badge author-us">我们俩</span>
+                <span class="author-badge author-us" data-cms="blog.items.2.author">我们俩</span>
               </div>
-              <h2><a href="posts/learning-in-public.html">两个人一起学东西</a></h2>
-              <p>他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
+              <h2><a href="posts/learning-in-public.html" data-cms="blog.items.2.title">两个人一起学东西</a></h2>
+              <p data-cms="blog.items.2.excerpt">他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
               <div class="tags">
-                <span class="tag">学习</span>
-                <span class="tag">成长</span>
+                <span class="tag" data-cms="blog.items.2.tag1">学习</span>
+                <span class="tag" data-cms="blog.items.2.tag2">成长</span>
               </div>
             </div>
           </article>
           <article class="blog-item" data-author="her">
-            <time datetime="2026-05-28">2026.05.28</time>
+            <time datetime="2026-05-28" data-cms="blog.items.3.date">2026.05.28</time>
             <div>
               <div class="blog-item-meta">
-                <span class="author-badge author-her">小雨</span>
+                <span class="author-badge author-her" data-cms="blog.items.3.author">小雨</span>
               </div>
-              <h2><a href="posts/creative-routine.html">建立创作习惯</a></h2>
-              <p>周末固定留出两小时各自创作——她画画，他写代码，互不打扰但彼此在场。</p>
+              <h2><a href="posts/creative-routine.html" data-cms="blog.items.3.title">建立创作习惯</a></h2>
+              <p data-cms="blog.items.3.excerpt">周末固定留出两小时各自创作——她画画，他写代码，互不打扰但彼此在场。</p>
               <div class="tags">
-                <span class="tag">习惯</span>
-                <span class="tag">创作</span>
+                <span class="tag" data-cms="blog.items.3.tag1">习惯</span>
+                <span class="tag" data-cms="blog.items.3.tag2">创作</span>
               </div>
             </div>
           </article>
           <article class="blog-item" data-author="us">
-            <time datetime="2026-05-15">2026.05.15</time>
+            <time datetime="2026-05-15" data-cms="blog.items.4.date">2026.05.15</time>
             <div>
               <div class="blog-item-meta">
-                <span class="author-badge author-us">我们俩</span>
+                <span class="author-badge author-us" data-cms="blog.items.4.author">我们俩</span>
               </div>
-              <h2><a href="posts/read-more.html">今年读过的五本好书</a></h2>
-              <p>一人挑几本，凑成一份书单。有些书我们各读各的，有些是一起讨论着读完的。</p>
+              <h2><a href="posts/read-more.html" data-cms="blog.items.4.title">今年读过的五本好书</a></h2>
+              <p data-cms="blog.items.4.excerpt">一人挑几本，凑成一份书单。有些书我们各读各的，有些是一起讨论着读完的。</p>
               <div class="tags">
-                <span class="tag">阅读</span>
-                <span class="tag">推荐</span>
+                <span class="tag" data-cms="blog.items.4.tag1">阅读</span>
+                <span class="tag" data-cms="blog.items.4.tag2">推荐</span>
               </div>
             </div>
           </article>
@@ -150,11 +150,11 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
-      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <p data-cms="footer.copyright">&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
       <div class="social-links">
-        <a href="#">Instagram</a>
-        <a href="#">小红书</a>
-        <a href="#">GitHub</a>
+        <a href="#" data-cms="footer.social0">Instagram</a>
+        <a href="#" data-cms="footer.social1">小红书</a>
+        <a href="#" data-cms="footer.social2">GitHub</a>
       </div>
     </div>
   </footer>
@@ -163,5 +163,8 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/site-content.js"></script>
+  <script src="js/home-profile.js"></script>
+  <script src="js/content-editor.js"></script>
 </body>
 </html>

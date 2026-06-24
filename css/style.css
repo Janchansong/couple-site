@@ -3289,3 +3289,123 @@ body.more-sheet-open .mobile-tabbar {
 body.more-sheet-open .tabbar-more {
   color: var(--accent-her);
 }
+
+/* —— 页面内容编辑 —— */
+.cms-edit-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 280;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated, var(--bg-alt));
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.cms-edit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 290;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-elevated, var(--bg-alt));
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+}
+
+.cms-edit-bar-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cms-edit-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.cms-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cms-editing [data-edit-section] {
+  position: relative;
+}
+
+[data-edit-section] {
+  position: relative;
+}
+
+.cms-section-edit {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 5;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  border: 1px dashed var(--accent);
+  background: var(--bg);
+  color: var(--accent);
+  font-family: inherit;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.cms-field-editing {
+  outline: 2px dashed var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+  min-height: 1em;
+  cursor: text;
+}
+
+.cms-field-editing:focus {
+  outline-color: var(--accent-her, var(--accent));
+  background: rgba(255, 140, 80, 0.06);
+}
+
+.cms-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(12px);
+  z-index: 300;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.88rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.cms-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+html.cms-editing .cms-edit-toggle {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .cms-edit-toggle {
+    bottom: 1.5rem;
+  }
+  .cms-toast {
+    bottom: 5rem;
+  }
+}

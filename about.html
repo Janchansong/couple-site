@@ -35,7 +35,7 @@
   <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
-      <a href="index.html" class="logo">我们俩</a>
+      <a href="index.html" class="logo" data-cms="global.siteName">我们俩</a>
       <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -57,74 +57,74 @@
   </header>
 
   <main>
-    <div class="page-header container">
-      <h1>关于我们</h1>
-      <p>两个普通人，一段认真过日子的故事。</p>
+    <div class="page-header container" data-edit-section="页面标题">
+      <h1 data-cms="about.title">关于我们</h1>
+      <p data-cms="about.subtitle">两个普通人，一段认真过日子的故事。</p>
     </div>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
-        <div class="couple-intro">
-          <p>我们在这个网站里分享各自擅长的事，也记录一起做过的事。不追求完美，只希望能诚实地留下一些生活的痕迹。</p>
+        <div class="couple-intro" data-edit-section="简介">
+          <p data-cms="about.intro">我们在这个网站里分享各自擅长的事，也记录一起做过的事。不追求完美，只希望能诚实地留下一些生活的痕迹。</p>
         </div>
 
         <div class="couple-profiles">
-          <article class="profile-card">
-            <div class="about-avatar avatar-him-bg">明</div>
-            <h2>小明</h2>
-            <p class="profile-role">程序员 · 咖啡爱好者</p>
-            <p>白天写代码，晚上研究怎么做手冲。喜欢折腾各种 side project，这个网站的代码主要是我写的（她负责挑刺）。</p>
-            <p>相信「做出来比想完美更重要」，所以博客更新频率时快时慢，但一直在写。</p>
+          <article class="profile-card" data-edit-section="小明的介绍">
+            <div class="about-avatar avatar-him-bg" data-cms="about.him.avatar">明</div>
+            <h2 data-cms="about.him.name">小明</h2>
+            <p class="profile-role" data-cms="about.him.role">程序员 · 咖啡爱好者</p>
+            <p data-cms="about.him.p1">白天写代码，晚上研究怎么做手冲。喜欢折腾各种 side project，这个网站的代码主要是我写的（她负责挑刺）。</p>
+            <p data-cms="about.him.p2">相信「做出来比想完美更重要」，所以博客更新频率时快时慢，但一直在写。</p>
             <div class="skills">
-              <span class="skill">JavaScript</span>
-              <span class="skill">Python</span>
-              <span class="skill">摄影</span>
-              <span class="skill">做饭（学习中）</span>
+              <span class="skill" data-cms="about.him.skill0">JavaScript</span>
+              <span class="skill" data-cms="about.him.skill1">Python</span>
+              <span class="skill" data-cms="about.him.skill2">摄影</span>
+              <span class="skill" data-cms="about.him.skill3">做饭（学习中）</span>
             </div>
           </article>
 
-          <article class="profile-card">
-            <div class="about-avatar avatar-her-bg">雨</div>
-            <h2>小雨</h2>
-            <p class="profile-role">设计师 · 美食探索家</p>
-            <p>负责让这个网站好看，也负责让家里的饭好吃。对色彩、排版和餐具都有点小执念，周末最爱逛菜市场。</p>
-            <p>正在学插画，偶尔会在博客发一些手绘的小作品和生活随笔。</p>
+          <article class="profile-card" data-edit-section="小雨的介绍">
+            <div class="about-avatar avatar-her-bg" data-cms="about.her.avatar">雨</div>
+            <h2 data-cms="about.her.name">小雨</h2>
+            <p class="profile-role" data-cms="about.her.role">设计师 · 美食探索家</p>
+            <p data-cms="about.her.p1">负责让这个网站好看，也负责让家里的饭好吃。对色彩、排版和餐具都有点小执念，周末最爱逛菜市场。</p>
+            <p data-cms="about.her.p2">正在学插画，偶尔会在博客发一些手绘的小作品和生活随笔。</p>
             <div class="skills">
-              <span class="skill">UI 设计</span>
-              <span class="skill">插画</span>
-              <span class="skill">烘焙</span>
-              <span class="skill">旅行规划</span>
+              <span class="skill" data-cms="about.her.skill0">UI 设计</span>
+              <span class="skill" data-cms="about.her.skill1">插画</span>
+              <span class="skill" data-cms="about.her.skill2">烘焙</span>
+              <span class="skill" data-cms="about.her.skill3">旅行规划</span>
             </div>
           </article>
         </div>
 
-        <div class="shared-story">
-          <h2>我们的时间线</h2>
+        <div class="shared-story" data-edit-section="时间线">
+          <h2 data-cms="about.timelineTitle">我们的时间线</h2>
           <div class="timeline">
             <div class="timeline-item">
-              <span class="year">2019</span>
-              <h3>相识</h3>
-              <p>朋友介绍，第一次见面聊了三小时，从电影聊到各自想做的事。</p>
+              <span class="year" data-cms="about.timeline.0.year">2019</span>
+              <h3 data-cms="about.timeline.0.title">相识</h3>
+              <p data-cms="about.timeline.0.desc">朋友介绍，第一次见面聊了三小时，从电影聊到各自想做的事。</p>
             </div>
             <div class="timeline-item">
-              <span class="year">2022</span>
-              <h3>结婚</h3>
-              <p>小型婚礼，只邀请了最亲近的人。蜜月去了厦门，第一次一起认真规划一趟旅行。</p>
+              <span class="year" data-cms="about.timeline.1.year">2022</span>
+              <h3 data-cms="about.timeline.1.title">结婚</h3>
+              <p data-cms="about.timeline.1.desc">小型婚礼，只邀请了最亲近的人。蜜月去了厦门，第一次一起认真规划一趟旅行。</p>
             </div>
             <div class="timeline-item">
-              <span class="year">2024</span>
-              <h3>装修小家</h3>
-              <p>搬进属于自己的小窝，周末刷墙、装柜子，吵过架也和好过，最后都变成了回忆。</p>
+              <span class="year" data-cms="about.timeline.2.year">2024</span>
+              <h3 data-cms="about.timeline.2.title">装修小家</h3>
+              <p data-cms="about.timeline.2.desc">搬进属于自己的小窝，周末刷墙、装柜子，吵过架也和好过，最后都变成了回忆。</p>
             </div>
             <div class="timeline-item">
-              <span class="year">2025</span>
-              <h3>京都之旅</h3>
-              <p>第一次一起出国。她负责攻略，他负责扛行李和找路（经常找错）。</p>
+              <span class="year" data-cms="about.timeline.3.year">2025</span>
+              <h3 data-cms="about.timeline.3.title">京都之旅</h3>
+              <p data-cms="about.timeline.3.desc">第一次一起出国。她负责攻略，他负责扛行李和找路（经常找错）。</p>
             </div>
             <div class="timeline-item">
-              <span class="year">2026</span>
-              <h3>上线这个小站</h3>
-              <p>说了很多年「要不要做个网站」，终于在一个下雨的周末动手了。</p>
+              <span class="year" data-cms="about.timeline.4.year">2026</span>
+              <h3 data-cms="about.timeline.4.title">上线这个小站</h3>
+              <p data-cms="about.timeline.4.desc">说了很多年「要不要做个网站」，终于在一个下雨的周末动手了。</p>
             </div>
           </div>
         </div>
@@ -135,11 +135,11 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
-      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <p data-cms="footer.copyright">&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
       <div class="social-links">
-        <a href="#">Instagram</a>
-        <a href="#">小红书</a>
-        <a href="#">GitHub</a>
+        <a href="#" data-cms="footer.social0">Instagram</a>
+        <a href="#" data-cms="footer.social1">小红书</a>
+        <a href="#" data-cms="footer.social2">GitHub</a>
       </div>
     </div>
   </footer>
@@ -148,5 +148,8 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/site-content.js"></script>
+  <script src="js/home-profile.js"></script>
+  <script src="js/content-editor.js"></script>
 </body>
 </html>

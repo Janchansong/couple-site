@@ -35,7 +35,7 @@
   <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
-      <a href="index.html" class="logo">我们俩</a>
+      <a href="index.html" class="logo" data-cms="global.siteName">我们俩</a>
       <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -57,162 +57,162 @@
   </header>
 
   <main>
-    <section class="hero hero-couple">
+    <section class="hero hero-couple" data-edit-section="首页横幅">
       <div class="container hero-inner">
-        <p class="hero-label">你好，我们是</p>
+        <p class="hero-label" data-cms="hero.label">你好，我们是</p>
         <div class="couple-avatars" aria-hidden="true">
-          <div class="avatar avatar-him">明</div>
+          <div class="avatar avatar-him" data-cms="hero.avatarHim">明</div>
           <span class="avatar-connector">&</span>
-          <div class="avatar avatar-her">雨</div>
+          <div class="avatar avatar-her" data-cms="hero.avatarHer">雨</div>
         </div>
-        <h1 class="hero-title">小明 <span class="amp">&</span> 小雨</h1>
-        <p class="hero-subtitle">一起写代码 · 一起做饭 · 一起把日子过成喜欢的样子</p>
-        <p class="hero-desc">这是专属于我们两个人的小站。在这里记录旅行、生活琐事、各自的工作学习，以及那些值得留住的瞬间。</p>
+        <h1 class="hero-title"><span data-cms="hero.nameHim">小明</span> <span class="amp">&</span> <span data-cms="hero.nameHer">小雨</span></h1>
+        <p class="hero-subtitle" data-cms="hero.subtitle">一起写代码 · 一起做饭 · 一起把日子过成喜欢的样子</p>
+        <p class="hero-desc" data-cms="hero.desc">这是专属于我们两个人的小站。在这里记录旅行、生活琐事、各自的工作学习，以及那些值得留住的瞬间。</p>
         <div class="hero-actions hero-actions-desktop">
-          <a href="menu.html" class="btn btn-primary">老婆点菜 🍳</a>
-          <a href="about.html" class="btn btn-secondary">认识我们</a>
-          <a href="blog.html" class="btn btn-secondary">读读博客</a>
+          <a href="menu.html" class="btn btn-primary" data-cms="hero.btnMenu">老婆点菜 🍳</a>
+          <a href="about.html" class="btn btn-secondary" data-cms="hero.btnAbout">认识我们</a>
+          <a href="blog.html" class="btn btn-secondary" data-cms="hero.btnBlog">读读博客</a>
         </div>
       </div>
       <div class="hero-decoration" aria-hidden="true"></div>
       <div class="hero-decoration hero-decoration-2" aria-hidden="true"></div>
     </section>
 
-    <section class="section app-quick-section">
+    <section class="section app-quick-section" data-edit-section="快捷入口">
       <div class="container">
         <div class="app-quick-grid">
           <a href="menu.html" class="app-quick-card app-quick-menu">
             <span class="app-quick-icon">🍳</span>
-            <strong>老婆点菜</strong>
-            <span>今天想吃什么</span>
+            <strong data-cms="home.quick.0.title">老婆点菜</strong>
+            <span data-cms="home.quick.0.sub">今天想吃什么</span>
           </a>
           <a href="photos.html" class="app-quick-card app-quick-photos">
             <span class="app-quick-icon">📷</span>
-            <strong>上传照片</strong>
-            <span>拍一张存这里</span>
+            <strong data-cms="home.quick.1.title">上传照片</strong>
+            <span data-cms="home.quick.1.sub">拍一张存这里</span>
           </a>
           <a href="calendar.html" class="app-quick-card app-quick-calendar">
             <span class="app-quick-icon">📅</span>
-            <strong>特殊日期</strong>
-            <span>纪念日提醒</span>
+            <strong data-cms="home.quick.2.title">特殊日期</strong>
+            <span data-cms="home.quick.2.sub">纪念日提醒</span>
           </a>
           <a href="about.html" class="app-quick-card app-quick-about">
             <span class="app-quick-icon">💕</span>
-            <strong>关于我们</strong>
-            <span>我们的故事</span>
+            <strong data-cms="home.quick.3.title">关于我们</strong>
+            <span data-cms="home.quick.3.sub">我们的故事</span>
           </a>
         </div>
       </div>
     </section>
 
-    <section class="section desktop-only-section">
+    <section class="section desktop-only-section" data-edit-section="备份提示">
       <div class="container">
         <div class="stability-banner">
-          <p>菜单、日历、照片已开启<strong>自动备份</strong>。建议每月导出一次完整备份，存到网盘更安心。</p>
+          <p data-cms="home.backupBanner" data-cms-html="true">菜单、日历、照片已开启<strong>自动备份</strong>。建议每月导出一次完整备份，存到网盘更安心。</p>
           <a href="settings.html" class="btn btn-secondary btn-sm">去备份</a>
         </div>
       </div>
     </section>
 
-    <section class="section desktop-only-section">
+    <section class="section desktop-only-section" data-edit-section="最新文章">
       <div class="container">
         <div class="section-header">
-          <h2>最新文章</h2>
+          <h2 data-cms="home.postsTitle">最新文章</h2>
           <a href="blog.html" class="link-arrow">查看全部 →</a>
         </div>
         <div class="post-grid">
           <article class="post-card">
             <div class="post-card-top">
-              <time datetime="2026-06-20">2026年6月20日</time>
-              <span class="author-badge author-him">小明</span>
+              <time datetime="2026-06-20" data-cms="home.posts.0.date">2026年6月20日</time>
+              <span class="author-badge author-him" data-cms="home.posts.0.author">小明</span>
             </div>
-            <h3><a href="posts/start-writing.html">为什么我们开始写博客</a></h3>
-            <p>两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
+            <h3><a href="posts/start-writing.html" data-cms="home.posts.0.title">为什么我们开始写博客</a></h3>
+            <p data-cms="home.posts.0.excerpt">两个人一起运营一个网站是什么体验？这是我们认真思考后的答案。</p>
             <div class="tags">
-              <span class="tag">思考</span>
-              <span class="tag">写作</span>
+              <span class="tag" data-cms="home.posts.0.tag1">思考</span>
+              <span class="tag" data-cms="home.posts.0.tag2">写作</span>
             </div>
           </article>
           <article class="post-card">
             <div class="post-card-top">
-              <time datetime="2026-06-15">2026年6月15日</time>
-              <span class="author-badge author-her">小雨</span>
+              <time datetime="2026-06-15" data-cms="home.posts.1.date">2026年6月15日</time>
+              <span class="author-badge author-her" data-cms="home.posts.1.author">小雨</span>
             </div>
-            <h3><a href="posts/minimal-design.html">极简设计的力量</a></h3>
-            <p>从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
+            <h3><a href="posts/minimal-design.html" data-cms="home.posts.1.title">极简设计的力量</a></h3>
+            <p data-cms="home.posts.1.excerpt">从装修到网站，我们越来越喜欢「少而精」——少即是多。</p>
             <div class="tags">
-              <span class="tag">设计</span>
-              <span class="tag">生活</span>
+              <span class="tag" data-cms="home.posts.1.tag1">设计</span>
+              <span class="tag" data-cms="home.posts.1.tag2">生活</span>
             </div>
           </article>
           <article class="post-card">
             <div class="post-card-top">
-              <time datetime="2026-06-08">2026年6月8日</time>
-              <span class="author-badge author-us">我们俩</span>
+              <time datetime="2026-06-08" data-cms="home.posts.2.date">2026年6月8日</time>
+              <span class="author-badge author-us" data-cms="home.posts.2.author">我们俩</span>
             </div>
-            <h3><a href="posts/learning-in-public.html">两个人一起学东西</a></h3>
-            <p>他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
+            <h3><a href="posts/learning-in-public.html" data-cms="home.posts.2.title">两个人一起学东西</a></h3>
+            <p data-cms="home.posts.2.excerpt">他学编程、她学插画，互相督促、互相分享，比一个人坚持容易多了。</p>
             <div class="tags">
-              <span class="tag">学习</span>
-              <span class="tag">成长</span>
+              <span class="tag" data-cms="home.posts.2.tag1">学习</span>
+              <span class="tag" data-cms="home.posts.2.tag2">成长</span>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt desktop-only-section">
+    <section class="section section-alt desktop-only-section" data-edit-section="一起做的事">
       <div class="container">
         <div class="section-header">
-          <h2>一起做的事</h2>
+          <h2 data-cms="home.projectsTitle">一起做的事</h2>
           <a href="projects.html" class="link-arrow">查看全部 →</a>
         </div>
         <div class="project-grid">
           <a href="projects.html#project-1" class="project-card">
             <div class="project-thumb" style="--hue: 25"></div>
             <div class="project-info">
-              <h3>我们的小家</h3>
-              <p>从毛坯到入住，一起选材料、刷墙、挑家具，把租来的房子变成家</p>
+              <h3 data-cms="home.projects.0.title">我们的小家</h3>
+              <p data-cms="home.projects.0.desc">从毛坯到入住，一起选材料、刷墙、挑家具，把租来的房子变成家</p>
             </div>
           </a>
           <a href="projects.html#project-2" class="project-card">
             <div class="project-thumb" style="--hue: 340"></div>
             <div class="project-info">
-              <h3>2025 京都之旅</h3>
-              <p>第一次一起出国旅行，寺庙、拉面、和意外迷路的小巷</p>
+              <h3 data-cms="home.projects.1.title">2025 京都之旅</h3>
+              <p data-cms="home.projects.1.desc">第一次一起出国旅行，寺庙、拉面、和意外迷路的小巷</p>
             </div>
           </a>
           <a href="projects.html#project-3" class="project-card">
             <div class="project-thumb" style="--hue: 160"></div>
             <div class="project-info">
-              <h3>这个网站</h3>
-              <p>他写代码、她定风格，周末一起搭出来的线上小窝</p>
+              <h3 data-cms="home.projects.2.title">这个网站</h3>
+              <p data-cms="home.projects.2.desc">他写代码、她定风格，周末一起搭出来的线上小窝</p>
             </div>
           </a>
         </div>
       </div>
     </section>
 
-    <section class="section story-banner">
+    <section class="section story-banner" data-edit-section="我们的故事">
       <div class="container story-inner">
         <div class="story-text">
-          <h2>关于「我们俩」</h2>
-          <p>2019 年相识，2022 年结婚。一个喜欢折腾技术，一个热爱设计和美食。平时各忙各的工作，周末一起做饭、散步、规划下一次旅行。</p>
-          <p>建这个网站，是想给未来的自己留一份可以翻看的记忆——不用多精彩，真实就好。</p>
-          <a href="about.html" class="link-arrow">了解更多 →</a>
+          <h2 data-cms="home.story.title">关于「我们俩」</h2>
+          <p data-cms="home.story.p1">2019 年相识，2022 年结婚。一个喜欢折腾技术，一个热爱设计和美食。平时各忙各的工作，周末一起做饭、散步、规划下一次旅行。</p>
+          <p data-cms="home.story.p2">建这个网站，是想给未来的自己留一份可以翻看的记忆——不用多精彩，真实就好。</p>
+          <a href="about.html" class="link-arrow" data-cms="home.story.linkText">了解更多 →</a>
         </div>
         <div class="story-stats">
           <div class="stat">
-            <span class="stat-num">7+</span>
-            <span class="stat-label">年在一起</span>
+            <span class="stat-num" data-cms="home.story.stat0.num">7+</span>
+            <span class="stat-label" data-cms="home.story.stat0.label">年在一起</span>
           </div>
           <div class="stat">
-            <span class="stat-num">12</span>
-            <span class="stat-label">篇博客</span>
+            <span class="stat-num" data-cms="home.story.stat1.num">12</span>
+            <span class="stat-label" data-cms="home.story.stat1.label">篇博客</span>
           </div>
           <div class="stat">
-            <span class="stat-num">5</span>
-            <span class="stat-label">次旅行</span>
+            <span class="stat-num" data-cms="home.story.stat2.num">5</span>
+            <span class="stat-label" data-cms="home.story.stat2.label">次旅行</span>
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@
     <section class="section home-photos-section section-alt">
       <div class="container">
         <div class="section-header">
-          <h2>最近的照片</h2>
+          <h2 data-cms="home.photosTitle">最近的照片</h2>
           <a href="photos.html" class="link-arrow">查看相册 →</a>
         </div>
         <div class="home-photos-grid" id="home-photos-grid">
@@ -233,7 +233,7 @@
     <section class="section home-dates-section">
       <div class="container">
         <div class="section-header">
-          <h2>即将到来的日子</h2>
+          <h2 data-cms="home.datesTitle">即将到来的日子</h2>
           <a href="calendar.html" class="link-arrow">查看日历 →</a>
         </div>
         <ul class="home-dates-list" id="home-dates-list">
@@ -242,13 +242,13 @@
       </div>
     </section>
 
-    <section class="section newsletter desktop-only-section">
+    <section class="section newsletter desktop-only-section" data-edit-section="订阅">
       <div class="container newsletter-inner">
-        <h2>订阅我们的动态</h2>
-        <p>新文章、旅行照片或生活碎片，不定期分享，不会打扰你。</p>
+        <h2 data-cms="home.newsletter.title">订阅我们的动态</h2>
+        <p data-cms="home.newsletter.desc">新文章、旅行照片或生活碎片，不定期分享，不会打扰你。</p>
         <form class="newsletter-form" id="newsletter-form">
           <input type="email" placeholder="你的邮箱地址" required aria-label="邮箱地址">
-          <button type="submit" class="btn btn-primary">订阅</button>
+          <button type="submit" class="btn btn-primary" data-cms="home.newsletter.btn">订阅</button>
         </form>
         <p class="form-message" id="newsletter-message" hidden>感谢订阅！我们会与你保持联系。</p>
       </div>
@@ -258,11 +258,11 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
-      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <p data-cms="footer.copyright">&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
       <div class="social-links">
-        <a href="#">Instagram</a>
-        <a href="#">小红书</a>
-        <a href="#">GitHub</a>
+        <a href="#" data-cms="footer.social0">Instagram</a>
+        <a href="#" data-cms="footer.social1">小红书</a>
+        <a href="#" data-cms="footer.social2">GitHub</a>
       </div>
     </div>
   </footer>
@@ -272,7 +272,9 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/site-content.js"></script>
   <script src="js/home-profile.js"></script>
+  <script src="js/content-editor.js"></script>
   <script src="js/photos.js"></script>
 </body>
 </html>

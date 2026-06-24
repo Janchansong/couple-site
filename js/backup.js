@@ -12,6 +12,7 @@
     menuCustom: "couple-menu-custom",
     menuOrders: "couple-menu-orders",
     homeProfile: "couple-home-profile",
+    siteContent: "couple-site-content",
   };
 
   let autoBackupTimer = null;
@@ -110,6 +111,7 @@
       menuCustom: safeParse(localStorage.getItem(STORAGE_KEYS.menuCustom), []),
       menuOrders: safeParse(localStorage.getItem(STORAGE_KEYS.menuOrders), []),
       homeProfile: safeParse(localStorage.getItem(STORAGE_KEYS.homeProfile), null),
+      siteContent: safeParse(localStorage.getItem(STORAGE_KEYS.siteContent), null),
     };
   }
 
@@ -127,6 +129,11 @@
       localStorage.setItem(STORAGE_KEYS.homeProfile, JSON.stringify(data.homeProfile));
       window.CoupleHomeProfile?.apply?.(data.homeProfile);
       window.dispatchEvent(new CustomEvent("couple-home-profile-updated"));
+    }
+    if (data.siteContent && typeof data.siteContent === "object") {
+      localStorage.setItem(STORAGE_KEYS.siteContent, JSON.stringify(data.siteContent));
+      window.CoupleSiteContent?.apply?.();
+      window.dispatchEvent(new CustomEvent("couple-site-content-updated"));
     }
   }
 

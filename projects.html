@@ -35,7 +35,7 @@
   <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
-      <a href="index.html" class="logo">我们俩</a>
+      <a href="index.html" class="logo" data-cms="global.siteName">我们俩</a>
       <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -57,52 +57,52 @@
   </header>
 
   <main>
-    <div class="page-header container">
-      <h1>一起做的事</h1>
-      <p>不全是「作品」，更多是两个人一起投入过时间和心思的事情。</p>
+    <div class="page-header container" data-edit-section="页面标题">
+      <h1 data-cms="projects.title">一起做的事</h1>
+      <p data-cms="projects.subtitle">不全是「作品」，更多是两个人一起投入过时间和心思的事情。</p>
     </div>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
-        <article class="project-detail" id="project-1">
+        <article class="project-detail" id="project-1" data-edit-section="我们的小家">
           <div class="project-detail-visual" style="--hue: 25"></div>
           <div class="project-detail-text">
-            <span class="author-badge author-us">我们俩</span>
-            <h2>我们的小家</h2>
+            <span class="author-badge author-us" data-cms="projects.items.0.badge">我们俩</span>
+            <h2 data-cms="projects.items.0.title">我们的小家</h2>
             <div class="project-tags">
-              <span class="tag">装修</span>
-              <span class="tag">生活</span>
+              <span class="tag" data-cms="projects.items.0.tag1">装修</span>
+              <span class="tag" data-cms="projects.items.0.tag2">生活</span>
             </div>
-            <p>2024 年，我们花了几个月时间改造租来的两居室。她定风格和配色，他负责测量、安装和跟师傅沟通（虽然经常沟通失败）。</p>
-            <p>从刷墙到选沙发，每个决定都要讨论——有时候争论，但最后看到成品，都觉得值得。这是第一个真正属于「我们」的空间。</p>
+            <p data-cms="projects.items.0.p1">2024 年，我们花了几个月时间改造租来的两居室。她定风格和配色，他负责测量、安装和跟师傅沟通（虽然经常沟通失败）。</p>
+            <p data-cms="projects.items.0.p2">从刷墙到选沙发，每个决定都要讨论——有时候争论，但最后看到成品，都觉得值得。这是第一个真正属于「我们」的空间。</p>
           </div>
         </article>
 
-        <article class="project-detail" id="project-2">
+        <article class="project-detail" id="project-2" data-edit-section="京都之旅">
           <div class="project-detail-visual" style="--hue: 340"></div>
           <div class="project-detail-text">
-            <span class="author-badge author-us">我们俩</span>
-            <h2>2025 京都之旅</h2>
+            <span class="author-badge author-us" data-cms="projects.items.1.badge">我们俩</span>
+            <h2 data-cms="projects.items.1.title">2025 京都之旅</h2>
             <div class="project-tags">
-              <span class="tag">旅行</span>
-              <span class="tag">摄影</span>
+              <span class="tag" data-cms="projects.items.1.tag1">旅行</span>
+              <span class="tag" data-cms="projects.items.1.tag2">摄影</span>
             </div>
-            <p>第一次一起出国。她做了超详细的攻略（Excel 版），他负责订机票酒店和扛两个行李箱。</p>
-            <p>清水寺、伏见稻荷、锦市场……也迷路过，也排错队过，但在鸭川边散步的那个傍晚，两个人都觉得：以后还要一起去更多地方。</p>
+            <p data-cms="projects.items.1.p1">第一次一起出国。她做了超详细的攻略（Excel 版），他负责订机票酒店和扛两个行李箱。</p>
+            <p data-cms="projects.items.1.p2">清水寺、伏见稻荷、锦市场……也迷路过，也排错队过，但在鸭川边散步的那个傍晚，两个人都觉得：以后还要一起去更多地方。</p>
           </div>
         </article>
 
-        <article class="project-detail" id="project-3">
+        <article class="project-detail" id="project-3" data-edit-section="这个网站">
           <div class="project-detail-visual" style="--hue: 160"></div>
           <div class="project-detail-text">
-            <span class="author-badge author-us">我们俩</span>
-            <h2>这个网站</h2>
+            <span class="author-badge author-us" data-cms="projects.items.2.badge">我们俩</span>
+            <h2 data-cms="projects.items.2.title">这个网站</h2>
             <div class="project-tags">
-              <span class="tag">Web</span>
-              <span class="tag">协作</span>
+              <span class="tag" data-cms="projects.items.2.tag1">Web</span>
+              <span class="tag" data-cms="projects.items.2.tag2">协作</span>
             </div>
-            <p>说了很多年「要不要做个网站」，2026 年一个下雨的周末终于动手。他写 HTML/CSS/JS，她定配色、字体和文案，边做边吵边改。</p>
-            <p>不追求多厉害，就是一个属于我们俩的线上小窝——以后可以慢慢往里添东西。</p>
+            <p data-cms="projects.items.2.p1">说了很多年「要不要做个网站」，2026 年一个下雨的周末终于动手。他写 HTML/CSS/JS，她定配色、字体和文案，边做边吵边改。</p>
+            <p data-cms="projects.items.2.p2">不追求多厉害，就是一个属于我们俩的线上小窝——以后可以慢慢往里添东西。</p>
           </div>
         </article>
       </div>
@@ -112,11 +112,11 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
-      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <p data-cms="footer.copyright">&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
       <div class="social-links">
-        <a href="#">Instagram</a>
-        <a href="#">小红书</a>
-        <a href="#">GitHub</a>
+        <a href="#" data-cms="footer.social0">Instagram</a>
+        <a href="#" data-cms="footer.social1">小红书</a>
+        <a href="#" data-cms="footer.social2">GitHub</a>
       </div>
     </div>
   </footer>
@@ -125,5 +125,8 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/site-content.js"></script>
+  <script src="js/home-profile.js"></script>
+  <script src="js/content-editor.js"></script>
 </body>
 </html>

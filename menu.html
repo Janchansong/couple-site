@@ -35,7 +35,7 @@
   <script src="js/auth.js"></script>
   <header class="site-header">
     <nav class="nav container">
-      <a href="index.html" class="logo">我们俩</a>
+      <a href="index.html" class="logo" data-cms="global.siteName">我们俩</a>
       <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -173,11 +173,11 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <p class="footer-backup"><a href="settings.html">🛡️ 数据备份与恢复</a></p>
-      <p>&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
+      <p data-cms="footer.copyright">&copy; 2026 小明 &amp; 小雨. 用爱发电.</p>
       <div class="social-links">
-        <a href="#">Instagram</a>
-        <a href="#">小红书</a>
-        <a href="#">GitHub</a>
+        <a href="#" data-cms="footer.social0">Instagram</a>
+        <a href="#" data-cms="footer.social1">小红书</a>
+        <a href="#" data-cms="footer.social2">GitHub</a>
       </div>
     </div>
   </footer>
@@ -187,6 +187,9 @@
   <script src="js/cloud-sync.js"></script>
   <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/site-content.js"></script>
+  <script src="js/home-profile.js"></script>
+  <script src="js/content-editor.js"></script>
   <script src="js/menu.js"></script>
 </body>
 </html>

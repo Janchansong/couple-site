@@ -101,11 +101,20 @@
     const homeProfile = window.CoupleHomeProfile?.mergeProfiles
       ? CoupleHomeProfile.mergeProfiles(local.homeProfile, remote.homeProfile)
       : remote.homeProfile || local.homeProfile;
+    const siteContent = window.CoupleSiteContent?.mergeContent
+      ? CoupleSiteContent.mergeContent(local.siteContent, remote.siteContent)
+      : remote.siteContent || local.siteContent;
+    if (siteContent?.hero && homeProfile) {
+      siteContent.hero = CoupleHomeProfile.mergeProfiles(homeProfile, siteContent.hero);
+    } else if (homeProfile && siteContent) {
+      siteContent.hero = homeProfile;
+    }
     return {
       dates: mergeById(local.dates, remote.dates),
       menuCustom: mergeById(local.menuCustom, remote.menuCustom),
       menuOrders: mergeById(local.menuOrders, remote.menuOrders),
-      homeProfile,
+      homeProfile: siteContent?.hero || homeProfile,
+      siteContent,
     };
   }
 
@@ -115,7 +124,11 @@
       menuCustom: [],
       menuOrders: [],
       homeProfile: null,
+      siteContent: null,
     };
+    const siteContent = local.siteContent || window.CoupleSiteContent?.load?.() || null;
+    const hero = siteContent?.hero || local.homeProfile || window.CoupleHomeProfile?.load?.() || null;
+    const payloadContent = siteContent ? { ...siteContent, hero } : hero ? { hero, updatedAt: hero.updatedAt } : null;
     return {
       version: 1,
       updatedAt: new Date().toISOString(),
@@ -123,7 +136,8 @@
       dates: local.dates || [],
       menuCustom: local.menuCustom || [],
       menuOrders: local.menuOrders || [],
-      homeProfile: local.homeProfile || window.CoupleHomeProfile?.load?.() || null,
+      homeProfile: hero,
+      siteContent: payloadContent,
     };
   }
 
@@ -135,6 +149,7 @@
     window.CoupleBackup.scheduleAutoBackup?.();
     window.dispatchEvent(new CustomEvent("couple-dates-updated"));
     window.dispatchEvent(new CustomEvent("couple-home-profile-updated"));
+    window.dispatchEvent(new CustomEvent("couple-site-content-updated"));
     window.dispatchEvent(new CustomEvent("couple-cloud-synced"));
     return true;
   }
@@ -256,6 +271,7 @@
         menuCustom: payload.menuCustom,
         menuOrders: payload.menuOrders,
         homeProfile: payload.homeProfile,
+        siteContent: payload.siteContent,
       });
 
       setMeta({
