@@ -82,7 +82,7 @@
     const meta = CoupleSync.getMeta();
     const { room, url } = CoupleSync.getConfig();
     if (!CoupleSync.isEnabled()) {
-      el.innerHTML = '⚠️ <strong>云同步未连接</strong> — 老婆点的菜你看不到。请双击运行 <code>一键开启同步.bat</code>（约 3 分钟，只需做一次）。';
+      el.innerHTML = '⚠️ <strong>云同步未连接</strong> — 老婆点的菜你看不到。请双击运行 <code>解决同步.bat</code>（约 5 分钟，只需做一次）。';
       el.className = "sync-status sync-status-error";
       return;
     }

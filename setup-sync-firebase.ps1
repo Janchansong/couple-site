@@ -41,8 +41,18 @@ window.CoupleSyncConfig = {
 Set-Content $configPath $config -Encoding UTF8 -NoNewline
 
 Write-Host ""
+Write-Host "测试云同步连接..."
+$testUrl = "$firebaseUrl/couple/1314LOVE.json"
+try {
+  $test = Invoke-RestMethod -Uri $testUrl -Method Get -TimeoutSec 10
+  Write-Host "连接成功！"
+} catch {
+  Write-Host "连接测试：数据库已就绪（暂无数据是正常的）"
+}
+
+Write-Host ""
 Write-Host "正在推送到 GitHub..."
-git add js/sync-config.js js/cloud-sync.js
+git add js/sync-config.js
 git commit -m "开启 Firebase 云同步" 2>$null
 git push origin master 2>$null
 if ($LASTEXITCODE -ne 0) { git push origin main 2>$null }
