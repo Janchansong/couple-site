@@ -254,6 +254,43 @@
 
   initBackgroundUI();
 
+  function loadHomeProfileForm() {
+    if (!window.CoupleHomeProfile) return;
+    const p = CoupleHomeProfile.load();
+    document.getElementById("hp-label").value = p.label || "";
+    document.getElementById("hp-name-him").value = p.nameHim || "";
+    document.getElementById("hp-name-her").value = p.nameHer || "";
+    document.getElementById("hp-avatar-him").value = p.avatarHim || "";
+    document.getElementById("hp-avatar-her").value = p.avatarHer || "";
+    document.getElementById("hp-subtitle").value = p.subtitle || "";
+    document.getElementById("hp-desc").value = p.desc || "";
+  }
+
+  document.getElementById("btn-hp-save")?.addEventListener("click", () => {
+    if (!window.CoupleHomeProfile) return;
+    CoupleHomeProfile.save({
+      label: document.getElementById("hp-label")?.value.trim(),
+      nameHim: document.getElementById("hp-name-him")?.value.trim(),
+      nameHer: document.getElementById("hp-name-her")?.value.trim(),
+      avatarHim: document.getElementById("hp-avatar-him")?.value.trim(),
+      avatarHer: document.getElementById("hp-avatar-her")?.value.trim(),
+      subtitle: document.getElementById("hp-subtitle")?.value.trim(),
+      desc: document.getElementById("hp-desc")?.value.trim(),
+    });
+    showToast("首页已保存，返回首页查看");
+  });
+
+  document.getElementById("btn-hp-reset")?.addEventListener("click", () => {
+    if (!window.CoupleHomeProfile) return;
+    if (!confirm("恢复默认首页文字？")) return;
+    CoupleHomeProfile.save({ ...CoupleHomeProfile.DEFAULTS });
+    loadHomeProfileForm();
+    showToast("已恢复默认");
+  });
+
+  loadHomeProfileForm();
+  window.addEventListener("couple-home-profile-updated", loadHomeProfileForm);
+
   document.getElementById("btn-auth-save")?.addEventListener("click", () => {
     const pwd = document.getElementById("auth-new-password")?.value || "";
     const confirm = document.getElementById("auth-confirm-password")?.value || "";

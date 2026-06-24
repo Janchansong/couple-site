@@ -11,6 +11,7 @@
     dates: "couple-special-dates",
     menuCustom: "couple-menu-custom",
     menuOrders: "couple-menu-orders",
+    homeProfile: "couple-home-profile",
   };
 
   let autoBackupTimer = null;
@@ -108,6 +109,7 @@
       dates: safeParse(localStorage.getItem(STORAGE_KEYS.dates), []),
       menuCustom: safeParse(localStorage.getItem(STORAGE_KEYS.menuCustom), []),
       menuOrders: safeParse(localStorage.getItem(STORAGE_KEYS.menuOrders), []),
+      homeProfile: safeParse(localStorage.getItem(STORAGE_KEYS.homeProfile), null),
     };
   }
 
@@ -120,6 +122,11 @@
     }
     if (Array.isArray(data.menuOrders)) {
       localStorage.setItem(STORAGE_KEYS.menuOrders, JSON.stringify(data.menuOrders));
+    }
+    if (data.homeProfile && typeof data.homeProfile === "object") {
+      localStorage.setItem(STORAGE_KEYS.homeProfile, JSON.stringify(data.homeProfile));
+      window.CoupleHomeProfile?.apply?.(data.homeProfile);
+      window.dispatchEvent(new CustomEvent("couple-home-profile-updated"));
     }
   }
 

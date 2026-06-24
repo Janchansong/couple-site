@@ -98,10 +98,14 @@
   }
 
   function mergeData(local, remote) {
+    const homeProfile = window.CoupleHomeProfile?.mergeProfiles
+      ? CoupleHomeProfile.mergeProfiles(local.homeProfile, remote.homeProfile)
+      : remote.homeProfile || local.homeProfile;
     return {
       dates: mergeById(local.dates, remote.dates),
       menuCustom: mergeById(local.menuCustom, remote.menuCustom),
       menuOrders: mergeById(local.menuOrders, remote.menuOrders),
+      homeProfile,
     };
   }
 
@@ -110,6 +114,7 @@
       dates: [],
       menuCustom: [],
       menuOrders: [],
+      homeProfile: null,
     };
     return {
       version: 1,
@@ -118,6 +123,7 @@
       dates: local.dates || [],
       menuCustom: local.menuCustom || [],
       menuOrders: local.menuOrders || [],
+      homeProfile: local.homeProfile || window.CoupleHomeProfile?.load?.() || null,
     };
   }
 
@@ -128,6 +134,7 @@
     window.CoupleBackup.writeLocalData(merged);
     window.CoupleBackup.scheduleAutoBackup?.();
     window.dispatchEvent(new CustomEvent("couple-dates-updated"));
+    window.dispatchEvent(new CustomEvent("couple-home-profile-updated"));
     window.dispatchEvent(new CustomEvent("couple-cloud-synced"));
     return true;
   }
@@ -248,6 +255,7 @@
         dates: payload.dates,
         menuCustom: payload.menuCustom,
         menuOrders: payload.menuOrders,
+        homeProfile: payload.homeProfile,
       });
 
       setMeta({
