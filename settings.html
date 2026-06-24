@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <script src="js/mobile-boot.js"></script>
   <script src="js/background-boot.js"></script>
+  <script src="js/auth-config.js"></script>
+  <script src="js/auth-boot.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="数据备份 — 保护菜单、日历和照片数据">
   <title>数据备份 · 我们俩</title>
@@ -79,6 +81,26 @@
           <h2>立即备份</h2>
           <p>手动触发一次自动备份，通常不需要，系统已在后台自动执行。</p>
           <button type="button" class="btn btn-secondary" id="btn-auto-backup">立即自动备份</button>
+        </div>
+
+        <div class="settings-card settings-card-wide">
+          <h2>登录密码 🔐</h2>
+          <p>打开网站需要先输入家庭密码。默认密码是 <code>1314</code>，建议改掉。修改后需 push 到 GitHub，你和老婆才会用同一个新密码。</p>
+          <div class="sync-form">
+            <label class="sync-field">
+              <span>新密码</span>
+              <input type="password" id="auth-new-password" placeholder="至少 2 位" autocomplete="new-password">
+            </label>
+            <label class="sync-field">
+              <span>确认密码</span>
+              <input type="password" id="auth-confirm-password" placeholder="再输入一次" autocomplete="new-password">
+            </label>
+            <div class="sync-actions">
+              <button type="button" class="btn btn-primary" id="btn-auth-save">保存新密码（本机）</button>
+              <button type="button" class="btn btn-secondary" id="btn-auth-logout">退出登录</button>
+            </div>
+          </div>
+          <p class="settings-meta">要让老婆也用新密码：改 <code>js/auth-config.js</code> 里的 password，然后 push 到 GitHub。</p>
         </div>
 
         <div class="settings-card settings-card-wide">
@@ -181,6 +203,7 @@
     </div>
   </footer>
 
+  <script src="js/auth.js"></script>
   <script src="js/backup.js"></script>
   <script src="js/sync-config.js"></script>
   <script src="js/cloud-sync.js"></script>

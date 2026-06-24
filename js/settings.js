@@ -252,8 +252,31 @@
     renderBgPreview();
   }
 
+  initBackgroundUI();
+
+  document.getElementById("btn-auth-save")?.addEventListener("click", () => {
+    const pwd = document.getElementById("auth-new-password")?.value || "";
+    const confirm = document.getElementById("auth-confirm-password")?.value || "";
+    if (pwd.length < 2) {
+      showToast("密码至少 2 位");
+      return;
+    }
+    if (pwd !== confirm) {
+      showToast("两次密码不一致");
+      return;
+    }
+    if (window.CoupleAuth?.setPassword(pwd)) {
+      showToast("密码已更新（本机）");
+      document.getElementById("auth-new-password").value = "";
+      document.getElementById("auth-confirm-password").value = "";
+    }
+  });
+
+  document.getElementById("btn-auth-logout")?.addEventListener("click", () => {
+    window.CoupleAuth?.logout?.();
+  });
+
   renderStats();
   loadSyncForm();
-  initBackgroundUI();
   window.addEventListener("couple-backup-updated", renderStats);
 })();
