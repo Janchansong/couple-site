@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
-"""静态网站生产服务器 — 双击或 python server.py 启动"""
+"""Static site production server."""
 
 import os
 import socket
+import sys
 from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+
+PORT = int(os.environ.get("PORT", "8080"))
+HOST = os.environ.get("HOST", "0.0.0.0")
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except OSError:
+        pass
 
 PORT = int(os.environ.get("PORT", "8080"))
 HOST = os.environ.get("HOST", "0.0.0.0")
@@ -38,18 +49,18 @@ def main():
     ip = local_ip()
 
     print("=" * 48)
-    print("  我们俩 · 网站已启动")
+    print("  Couple site server started")
     print("=" * 48)
-    print(f"  本机访问:  http://127.0.0.1:{PORT}")
-    print(f"  局域网访问: http://{ip}:{PORT}")
-    print(f"  根目录:     {ROOT}")
-    print("  按 Ctrl+C 停止")
+    print(f"  Local:   http://127.0.0.1:{PORT}")
+    print(f"  Network: http://{ip}:{PORT}")
+    print(f"  Root:    {ROOT}")
+    print("  Press Ctrl+C to stop")
     print("=" * 48)
 
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n服务器已停止")
+        print("\nServer stopped")
         server.server_close()
 
 
