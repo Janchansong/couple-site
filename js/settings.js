@@ -82,8 +82,8 @@
     const meta = CoupleSync.getMeta();
     const { room, url } = CoupleSync.getConfig();
     if (!room || !url) {
-      el.textContent = "同步未配置 — 填写同步码和服务器地址后保存";
-      el.className = "sync-status";
+      el.innerHTML = '⚠️ <strong>云同步未连接</strong> — 你和老婆的数据各自存在自己手机里，点菜不会互通。请双击运行项目里的 <code>deploy-sync.bat</code>（约 3 分钟，只需做一次）。';
+      el.className = "sync-status sync-status-error";
       return;
     }
     const parts = [`同步码：${room}`, `服务器：${url}`];

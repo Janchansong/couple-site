@@ -513,4 +513,15 @@
     renderManageList();
     updatePendingBadge();
   });
+
+  function updateSyncBanner() {
+    const banner = document.getElementById("sync-banner");
+    if (!banner || !window.CoupleSync) return;
+    banner.hidden = CoupleSync.isEnabled();
+  }
+
+  updateSyncBanner();
+  window.addEventListener("couple-sync-updated", updateSyncBanner);
+  window.addEventListener("couple-sync-config-changed", updateSyncBanner);
+  setTimeout(updateSyncBanner, 500);
 })();
