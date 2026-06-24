@@ -311,19 +311,28 @@
   function initUpload() {
     const zone = document.getElementById("upload-zone");
     const input = document.getElementById("photo-input");
+    const camera = document.getElementById("photo-camera");
     const btn = document.getElementById("upload-btn");
+    const cameraBtn = document.getElementById("upload-camera");
 
-    btn?.addEventListener("click", () => input?.click());
-    zone?.addEventListener("click", (e) => {
-      if (e.target === zone || e.target.closest(".upload-zone-content")) {
-        if (e.target !== btn) input?.click();
-      }
+    const bindFileInput = (el) => {
+      el?.addEventListener("change", () => {
+        if (el.files?.length) handleFiles([...el.files]);
+        el.value = "";
+      });
+    };
+
+    btn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      input?.click();
+    });
+    cameraBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      camera?.click();
     });
 
-    input?.addEventListener("change", () => {
-      if (input.files) handleFiles([...input.files]);
-      input.value = "";
-    });
+    bindFileInput(input);
+    bindFileInput(camera);
 
     zone?.addEventListener("dragover", (e) => {
       e.preventDefault();

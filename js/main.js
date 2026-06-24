@@ -164,6 +164,9 @@
     initHomeDates();
     window.CouplePhotos?.refresh?.();
   });
+  window.addEventListener("couple-cloud-synced", () => {
+    initHomeDates();
+  });
   window.addEventListener("couple-photos-updated", () => {
     window.CouplePhotos?.refresh?.();
   });

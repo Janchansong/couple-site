@@ -503,4 +503,10 @@
   updatePendingBadge();
   initViewTabs();
   initEvents();
+
+  window.addEventListener("couple-cloud-synced", () => {
+    renderKitchen();
+    renderManageList();
+    updatePendingBadge();
+  });
 })();

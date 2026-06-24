@@ -414,6 +414,8 @@
   initDialog();
   renderAll();
 
+  window.addEventListener("couple-cloud-synced", renderAll);
+
   window.CoupleCalendar = {
     loadDates,
     nextOccurrence,

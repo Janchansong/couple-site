@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="js/mobile-boot.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="数据备份 — 保护菜单、日历和照片数据">
   <title>数据备份 · 我们俩</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,6 +79,60 @@
           <p>手动触发一次自动备份，通常不需要，系统已在后台自动执行。</p>
           <button type="button" class="btn btn-secondary" id="btn-auto-backup">立即自动备份</button>
         </div>
+
+        <div class="settings-card settings-card-wide sync-card">
+          <h2>家庭云同步 ☁️</h2>
+          <p>你和老婆不在同一 WiFi 时，点菜、日历、自定义菜单需要云同步才能互通。照片仍保存在各自手机，可用上方「导出备份」传给对方。</p>
+          <div class="sync-form">
+            <label class="sync-field">
+              <span>家庭同步码（两人填同一个）</span>
+              <div class="sync-input-row">
+                <input type="text" id="sync-room" maxlength="12" placeholder="例如 LOVE88" autocomplete="off">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-gen-room">生成</button>
+              </div>
+            </label>
+            <label class="sync-field">
+              <span>同步服务器地址</span>
+              <input type="url" id="sync-url" placeholder="https://你的同步服务.workers.dev">
+            </label>
+            <div class="sync-actions">
+              <button type="button" class="btn btn-primary" id="btn-save-sync">保存并开启同步</button>
+              <button type="button" class="btn btn-secondary" id="btn-sync-now">立即同步</button>
+            </div>
+          </div>
+          <p class="sync-status" id="sync-status">同步未配置</p>
+          <details class="sync-help">
+            <summary>如何获取同步服务器地址？（免费，约 5 分钟）</summary>
+            <ol>
+              <li>注册 <a href="https://dash.cloudflare.com/sign-up" target="_blank" rel="noopener">Cloudflare</a>（免费）</li>
+              <li>电脑打开命令行，进入本项目的 <code>worker</code> 文件夹</li>
+              <li>运行 <code>npx wrangler login</code> 登录一次</li>
+              <li>运行 <code>npx wrangler kv namespace create SYNC_KV</code>，把返回的 id 填进 <code>worker/wrangler.toml</code></li>
+              <li>运行 <code>npx wrangler deploy</code>，得到地址如 <code>https://couple-sync.xxx.workers.dev</code></li>
+              <li>把该地址填到上方「同步服务器地址」，同步码发给老婆</li>
+            </ol>
+          </details>
+        </div>
+
+        <div class="settings-card settings-card-wide deploy-card">
+          <h2>上线公网 🌐</h2>
+          <p><strong>不需要你公司电脑一直开着。</strong>下面都是云服务器托管（24 小时在线），部署一次即可，关机、下班老婆也能访问。</p>
+          <div class="deploy-options">
+            <div class="deploy-option deploy-option-highlight">
+              <h3>推荐：一键上云（GitHub Pages）</h3>
+              <p>双击运行 <code>deploy-cloud.bat</code>，登录 GitHub 后自动推到云端。地址形如 <code>https://你的用户名.github.io/couple-site/</code></p>
+            </div>
+            <div class="deploy-option">
+              <h3>方式 B：Netlify 云托管（约 2 分钟）</h3>
+              <p>双击 <code>deploy-netlify.bat</code>，把 zip 拖到网页，获得 <code>xxx.netlify.app</code> 链接。同样不需要你电脑开着。</p>
+            </div>
+            <div class="deploy-option">
+              <h3>方式 C：Cloudflare Pages 云托管</h3>
+              <p>登录 <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">Cloudflare</a> → Pages → 上传 zip。免费、全球 CDN。</p>
+            </div>
+          </div>
+          <p class="deploy-tip">⚠️ 本地 <code>python server.py</code> 或局域网地址只适合临时测试，公司电脑关机就打不开了。请用上面云托管方案。</p>
+        </div>
       </div>
     </section>
   </main>
@@ -97,6 +152,8 @@
   </footer>
 
   <script src="js/backup.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
   <script src="js/settings.js"></script>
 </body>

@@ -76,6 +76,84 @@
     renderStats();
   });
 
+  function renderSyncStatus() {
+    const el = document.getElementById("sync-status");
+    if (!el || !window.CoupleSync) return;
+    const meta = CoupleSync.getMeta();
+    const { room, url } = CoupleSync.getConfig();
+    if (!room || !url) {
+      el.textContent = "同步未配置 — 填写同步码和服务器地址后保存";
+      el.className = "sync-status";
+      return;
+    }
+    const parts = [`同步码：${room}`, `服务器：${url}`];
+    if (meta.lastPush) parts.push(`上次上传：${formatTime(meta.lastPush)}`);
+    if (meta.lastPull) parts.push(`上次拉取：${formatTime(meta.lastPull)}`);
+    if (meta.status === "error" && meta.lastError) {
+      el.textContent = parts.join(" · ") + ` · 错误：${meta.lastError}`;
+      el.className = "sync-status sync-status-error";
+    } else if (CoupleSync.isEnabled()) {
+      el.textContent = parts.join(" · ") + " · 已开启（约每 8 秒自动同步）";
+      el.className = "sync-status sync-status-ok";
+    } else {
+      el.textContent = parts.join(" · ");
+      el.className = "sync-status";
+    }
+  }
+
+  function loadSyncForm() {
+    if (!window.CoupleSync) return;
+    const { room, url } = CoupleSync.getConfig();
+    const roomEl = document.getElementById("sync-room");
+    const urlEl = document.getElementById("sync-url");
+    if (roomEl) roomEl.value = room;
+    if (urlEl) urlEl.value = url;
+    renderSyncStatus();
+  }
+
+  document.getElementById("btn-gen-room")?.addEventListener("click", () => {
+    const roomEl = document.getElementById("sync-room");
+    if (roomEl && window.CoupleSync) {
+      roomEl.value = CoupleSync.generateRoomCode();
+    }
+  });
+
+  document.getElementById("btn-save-sync")?.addEventListener("click", () => {
+    const room = document.getElementById("sync-room")?.value || "";
+    const url = document.getElementById("sync-url")?.value || "";
+    if (room.trim().length < 4) {
+      showToast("同步码至少 4 位");
+      return;
+    }
+    if (!url.trim()) {
+      showToast("请填写同步服务器地址");
+      return;
+    }
+    CoupleSync.setConfig(room, url);
+    showToast("云同步已开启");
+    renderSyncStatus();
+  });
+
+  document.getElementById("btn-sync-now")?.addEventListener("click", async () => {
+    if (!CoupleSync?.isEnabled()) {
+      showToast("请先保存同步配置");
+      return;
+    }
+    showToast("正在同步…");
+    await CoupleSync.push();
+    const pulled = await CoupleSync.pull();
+    showToast(pulled ? "已同步最新数据" : "同步完成");
+    renderSyncStatus();
+    renderStats();
+  });
+
+  window.addEventListener("couple-sync-updated", renderSyncStatus);
+  window.addEventListener("couple-cloud-synced", () => {
+    renderStats();
+    showToast("收到对方更新");
+  });
+
   renderStats();
+  loadSyncForm();
   window.addEventListener("couple-backup-updated", renderStats);
 })();

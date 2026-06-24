@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <script src="js/mobile-boot.js"></script>
   <meta name="description" content="我们俩的小站 — 记录生活、分享想法、留下足迹">
   <title>我们俩 · 共同的小站</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,7 +47,7 @@
         <h1 class="hero-title">小明 <span class="amp">&</span> 小雨</h1>
         <p class="hero-subtitle">一起写代码 · 一起做饭 · 一起把日子过成喜欢的样子</p>
         <p class="hero-desc">这是专属于我们两个人的小站。在这里记录旅行、生活琐事、各自的工作学习，以及那些值得留住的瞬间。</p>
-        <div class="hero-actions">
+        <div class="hero-actions hero-actions-desktop">
           <a href="menu.html" class="btn btn-primary">老婆点菜 🍳</a>
           <a href="about.html" class="btn btn-secondary">认识我们</a>
           <a href="blog.html" class="btn btn-secondary">读读博客</a>
@@ -56,7 +57,34 @@
       <div class="hero-decoration hero-decoration-2" aria-hidden="true"></div>
     </section>
 
-    <section class="section">
+    <section class="section app-quick-section">
+      <div class="container">
+        <div class="app-quick-grid">
+          <a href="menu.html" class="app-quick-card app-quick-menu">
+            <span class="app-quick-icon">🍳</span>
+            <strong>老婆点菜</strong>
+            <span>今天想吃什么</span>
+          </a>
+          <a href="photos.html" class="app-quick-card app-quick-photos">
+            <span class="app-quick-icon">📷</span>
+            <strong>上传照片</strong>
+            <span>拍一张存这里</span>
+          </a>
+          <a href="calendar.html" class="app-quick-card app-quick-calendar">
+            <span class="app-quick-icon">📅</span>
+            <strong>特殊日期</strong>
+            <span>纪念日提醒</span>
+          </a>
+          <a href="about.html" class="app-quick-card app-quick-about">
+            <span class="app-quick-icon">💕</span>
+            <strong>关于我们</strong>
+            <span>我们的故事</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section desktop-only-section">
       <div class="container">
         <div class="stability-banner">
           <p>菜单、日历、照片已开启<strong>自动备份</strong>。建议每月导出一次完整备份，存到网盘更安心。</p>
@@ -65,7 +93,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section desktop-only-section">
       <div class="container">
         <div class="section-header">
           <h2>最新文章</h2>
@@ -112,7 +140,7 @@
       </div>
     </section>
 
-    <section class="section section-alt">
+    <section class="section section-alt desktop-only-section">
       <div class="container">
         <div class="section-header">
           <h2>一起做的事</h2>
@@ -193,7 +221,7 @@
       </div>
     </section>
 
-    <section class="section newsletter">
+    <section class="section newsletter desktop-only-section">
       <div class="container newsletter-inner">
         <h2>订阅我们的动态</h2>
         <p>新文章、旅行照片或生活碎片，不定期分享，不会打扰你。</p>
@@ -219,6 +247,8 @@
   </footer>
 
   <script src="js/backup.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
   <script src="js/photos.js"></script>
 </body>

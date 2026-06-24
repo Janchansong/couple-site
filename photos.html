@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="js/mobile-boot.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <meta name="description" content="我们的相册 — 上传和珍藏两个人的照片">
   <title>相册 · 我们俩</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,11 +45,15 @@
       <div class="container">
         <div class="upload-zone" id="upload-zone">
           <input type="file" id="photo-input" accept="image/*" multiple hidden>
+          <input type="file" id="photo-camera" accept="image/*" capture="environment" hidden>
           <div class="upload-zone-content">
             <span class="upload-icon">📸</span>
-            <p><strong>点击或拖拽照片到这里</strong></p>
-            <p class="upload-hint">支持 JPG、PNG、GIF、WebP，可多选</p>
-            <button type="button" class="btn btn-primary" id="upload-btn">选择照片</button>
+            <p><strong>上传我们的照片</strong></p>
+            <p class="upload-hint">拍照或从相册选，支持多选</p>
+            <div class="upload-actions-mobile">
+              <button type="button" class="btn btn-primary" id="upload-camera">📷 拍照</button>
+              <button type="button" class="btn btn-secondary" id="upload-btn">相册选择</button>
+            </div>
           </div>
         </div>
 
@@ -121,6 +126,8 @@
   </footer>
 
   <script src="js/backup.js"></script>
+  <script src="js/cloud-sync.js"></script>
+  <script src="js/mobile.js"></script>
   <script src="js/main.js"></script>
   <script src="js/photos.js"></script>
 </body>

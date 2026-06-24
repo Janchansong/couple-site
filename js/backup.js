@@ -220,10 +220,25 @@
     }
   }
 
+  function writeLocalData(data) {
+    if (!data) return;
+    if (Array.isArray(data.dates)) {
+      localStorage.setItem(STORAGE_KEYS.dates, JSON.stringify(data.dates));
+    }
+    if (Array.isArray(data.menuCustom)) {
+      localStorage.setItem(STORAGE_KEYS.menuCustom, JSON.stringify(data.menuCustom));
+    }
+    if (Array.isArray(data.menuOrders)) {
+      localStorage.setItem(STORAGE_KEYS.menuOrders, JSON.stringify(data.menuOrders));
+    }
+    window.dispatchEvent(new CustomEvent("couple-backup-updated"));
+  }
+
   function scheduleAutoBackup() {
     clearTimeout(autoBackupTimer);
     autoBackupTimer = setTimeout(() => {
       runAutoBackup();
+      window.CoupleSync?.schedulePush?.();
     }, 1500);
   }
 
@@ -346,6 +361,7 @@
     getMeta,
     initStability,
     readLocalData,
+    writeLocalData,
   };
 
   window.CoupleBackupReady = initStability();
