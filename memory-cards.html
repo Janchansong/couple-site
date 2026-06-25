@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Loopy 记忆翻牌 🦫</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(160deg, #ffc8dd 0%, #ffafcc 40%, #ffb3c6 100%);
+      padding: 1rem;
+      user-select: none;
+    }
+
+    .hud {
+      width: min(420px, 96vw);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(200, 50, 100, 0.3);
+      font-size: 0.92rem;
+    }
+
+    .hud strong { font-size: 1.1rem; }
+
+    .board-wrap {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      padding: 0.9rem;
+      box-shadow: 0 12px 36px rgba(255, 105, 135, 0.28);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: min(400px, 92vw);
+    }
+
+    .card {
+      aspect-ratio: 1;
+      perspective: 600px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card.matched .card-face {
+      box-shadow: 0 0 14px rgba(255, 107, 157, 0.55);
+      border-color: #ff6b9d;
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .card-back {
+      background: linear-gradient(145deg, #ff6b9d, #e84393);
+      transform: rotateY(0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-back .loopy-icon {
+      font-size: clamp(1.4rem, 6vw, 1.8rem);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+
+    .card-back span {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .card-front {
+      background: #fff5f8;
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(80, 20, 50, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 50;
+      padding: 1.5rem;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .modal {
+      background: white;
+      border-radius: 24px;
+      padding: 2.2rem 1.8rem;
+      text-align: center;
+      max-width: 340px;
+      width: 90vw;
+      animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+    }
+
+    .modal .cover {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 0.8rem;
+      border-radius: 16px;
+      object-fit: contain;
+      background: #fff0f5;
+      padding: 6px;
+      border: 2px solid #ffd6e7;
+    }
+
+    .modal h1 { color: #e84393; font-size: 1.55rem; margin-bottom: 0.4rem; }
+    .modal p { color: #999; line-height: 1.7; margin-bottom: 1.2rem; font-size: 0.92rem; }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .stat .val { font-size: 1.7rem; font-weight: 700; color: #e84393; }
+    .stat .lbl { font-size: 0.76rem; color: #bbb; }
+
+    .btn {
+      padding: 0.78rem 2.2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      background: linear-gradient(135deg, #ff6b9d, #e84393);
+      color: white;
+      box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4);
+      transition: transform 0.15s;
+    }
+    .btn:hover { transform: scale(1.04); }
+
+    .difficulty {
+      display: flex;
+      gap: 0.45rem;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
+    }
+
+    .diff-btn {
+      padding: 0.4rem 0.85rem;
+      border: 2px solid #ffd6e7;
+      border-radius: 20px;
+      background: #fff;
+      color: #e84393;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .diff-btn.active {
+      background: #e84393;
+      color: white;
+      border-color: #e84393;
+    }
+
+    .match-flash { animation: flash 0.5s ease; }
+
+    @keyframes flash {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .win-loopy {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      animation: bounce 0.6s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <div>步数 <strong id="moves">0</strong></div>
+    <div>配对 <strong id="pairs">0</strong> / <span id="total">8</span></div>
+    <div>时间 <strong id="timer">0:00</strong></div>
+  </div>
+
+  <div class="board-wrap">
+    <div id="board"></div>
+  </div>
+
+  <div class="overlay" id="startScreen">
+    <div class="modal">
+      <img class="cover" src="images/loopy/cards/loopy-01.png" alt="Loopy">
+      <h1>Loopy 记忆翻牌</h1>
+      <p>翻开两张牌，找到相同的 Loopy 表情<br>看看你有多了解这只小海狸 🦫</p>
+      <div class="difficulty">
+        <button class="diff-btn active" data-pairs="6">简单 12张</button>
+        <button class="diff-btn" data-pairs="8">普通 16张</button>
+        <button class="diff-btn" data-pairs="10">困难 20张</button>
+      </div>
+      <button class="btn" id="startBtn">开始游戏</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="winScreen">
+    <div class="modal">
+      <div class="win-loopy">🦫💕</div>
+      <h1>全部配对成功！</h1>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="val" id="finalMoves">0</div>
+          <div class="lbl">步数</div>
+        </div>
+        <div class="stat">
+          <div class="val" id="finalTime">0:00</div>
+          <div class="lbl">用时</div>
+        </div>
+      </div>
+      <p id="rankText">Loopy 认证记忆力！</p>
+      <button class="btn" id="replayBtn">再玩一局</button>
+    </div>
+  </div>
+
+  <script>
+    const LOOPY_CARDS = [
+      { id: '01', src: 'images/loopy/cards/loopy-01.png' },
+      { id: '02', src: 'images/loopy/cards/loopy-02.png' },
+      { id: '04', src: 'images/loopy/cards/loopy-04.png' },
+      { id: '05', src: 'images/loopy/cards/loopy-05.png' },
+      { id: '06', src: 'images/loopy/cards/loopy-06.png' },
+      { id: '07', src: 'images/loopy/cards/loopy-07.png' },
+      { id: '10', src: 'images/loopy/cards/loopy-10.png' },
+      { id: '15', src: 'images/loopy/cards/loopy-15.png' },
+      { id: '16', src: 'images/loopy/cards/loopy-16.png' },
+      { id: '21', src: 'images/loopy/cards/loopy-21.png' },
+      { id: '22', src: 'images/loopy/cards/loopy-22.png' },
+      { id: '23', src: 'images/loopy/cards/loopy-23.png' },
+    ];
+
+    const RANKS = [
+      { maxMoves: 14, text: 'Loopy 本尊！过目不忘 🧠' },
+      { maxMoves: 22, text: '露比认证记忆力 🦫' },
+      { maxMoves: 32, text: '不错不错，可爱达人 🍬' },
+      { maxMoves: 999, text: '完成啦！送你一个抱抱 🫂' },
+    ];
+
+    const board = document.getElementById('board');
+    const movesEl = document.getElementById('moves');
+    const pairsEl = document.getElementById('pairs');
+    const totalEl = document.getElementById('total');
+    const timerEl = document.getElementById('timer');
+    const startScreen = document.getElementById('startScreen');
+    const winScreen = document.getElementById('winScreen');
+
+    let pairCount = 6;
+    let flipped = [];
+    let matched = 0;
+    let moves = 0;
+    let locked = false;
+    let timerInterval = null;
+    let seconds = 0;
+
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        pairCount = +btn.dataset.pairs;
+      });
+    });
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      return m + ':' + String(s % 60).padStart(2, '0');
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      seconds = 0;
+      timerEl.textContent = '0:00';
+      timerInterval = setInterval(() => {
+        seconds++;
+        timerEl.textContent = formatTime(seconds);
+      }, 1000);
+    }
+
+    function stopTimer() { clearInterval(timerInterval); }
+
+    function buildBoard() {
+      board.innerHTML = '';
+      const picked = shuffle([...LOOPY_CARDS]).slice(0, pairCount);
+      const deck = shuffle([...picked, ...picked]);
+
+      totalEl.textContent = pairCount;
+      if (pairCount <= 6) board.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      else if (pairCount <= 8) board.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      else board.style.gridTemplateColumns = 'repeat(5, 1fr)';
+
+      deck.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = item.id;
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-face card-back">
+              <div class="loopy-icon">🦫</div>
+              <span>LOOPY</span>
+            </div>
+            <div class="card-face card-front">
+              <img src="${item.src}" alt="Loopy" loading="eager">
+            </div>
+          </div>`;
+        card.addEventListener('click', () => flip(card));
+        board.appendChild(card);
+      });
+    }
+
+    function flip(card) {
+      if (locked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+      card.classList.add('flipped');
+      flipped.push(card);
+      if (flipped.length === 2) {
+        moves++;
+        movesEl.textContent = moves;
+        locked = true;
+        const [a, b] = flipped;
+        if (a.dataset.id === b.dataset.id) {
+          setTimeout(() => {
+            a.classList.add('matched', 'match-flash');
+            b.classList.add('matched', 'match-flash');
+            flipped = [];
+            locked = false;
+            matched++;
+            pairsEl.textContent = matched;
+            if (matched === pairCount) win();
+          }, 350);
+        } else {
+          setTimeout(() => {
+            a.classList.remove('flipped');
+            b.classList.remove('flipped');
+            flipped = [];
+            locked = false;
+          }, 700);
+        }
+      }
+    }
+
+    function win() {
+      stopTimer();
+      document.getElementById('finalMoves').textContent = moves;
+      document.getElementById('finalTime').textContent = formatTime(seconds);
+      let rank = RANKS[RANKS.length - 1].text;
+      for (const r of RANKS) {
+        if (moves <= r.maxMoves) { rank = r.text; break; }
+      }
+      document.getElementById('rankText').textContent = rank;
+      setTimeout(() => winScreen.classList.remove('hidden'), 500);
+    }
+
+    function startGame() {
+      matched = 0; moves = 0; flipped = []; locked = false;
+      movesEl.textContent = '0';
+      pairsEl.textContent = '0';
+      startScreen.classList.add('hidden');
+      winScreen.classList.add('hidden');
+      buildBoard();
+      startTimer();
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('replayBtn').addEventListener('click', () => {
+      winScreen.classList.add('hidden');
+      startScreen.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

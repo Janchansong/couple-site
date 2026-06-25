@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>接爱心大作战 💕</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .hud {
+      width: min(420px, 96vw);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.2rem;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .hud span { opacity: 0.85; }
+    .hud strong { color: #ff6b9d; font-size: 1.15rem; }
+
+    .combo {
+      color: #ffd700;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .combo.show { opacity: 1; }
+
+    #game {
+      position: relative;
+      width: min(420px, 96vw);
+      height: min(600px, 72vh);
+      background: linear-gradient(180deg, rgba(255,107,157,0.08) 0%, rgba(108,92,231,0.12) 100%);
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(255,107,157,0.15);
+    }
+
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .item {
+      position: absolute;
+      font-size: 2rem;
+      line-height: 1;
+      pointer-events: none;
+      transition: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .item.bomb { font-size: 1.8rem; }
+
+    #basket {
+      position: absolute;
+      bottom: 12px;
+      width: 72px;
+      height: 56px;
+      font-size: 2.8rem;
+      line-height: 1;
+      text-align: center;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+      z-index: 5;
+      transition: left 0.05s linear;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(26,10,46,0.88);
+      backdrop-filter: blur(6px);
+      z-index: 20;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .overlay.hidden { display: none; }
+
+    .overlay h1 {
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      color: #ff6b9d;
+      margin-bottom: 0.5rem;
+    }
+
+    .overlay p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      max-width: 280px;
+    }
+
+    .overlay .final-score {
+      font-size: 2.5rem;
+      color: #ffd700;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .overlay .rank {
+      color: #a29bfe;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.85rem 2.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      background: linear-gradient(135deg, #ff6b9d, #e84393);
+      color: white;
+      box-shadow: 0 6px 24px rgba(232,67,147,0.45);
+      transition: transform 0.15s;
+    }
+    .btn:hover { transform: scale(1.05); }
+    .btn:active { transform: scale(0.97); }
+
+    .tips {
+      margin-top: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.78rem;
+    }
+
+    .float-score {
+      position: absolute;
+      font-weight: 700;
+      font-size: 1.1rem;
+      pointer-events: none;
+      z-index: 10;
+      animation: floatUp 0.8s ease forwards;
+    }
+    .float-score.plus { color: #ff6b9d; }
+    .float-score.minus { color: #ff4757; }
+
+    @keyframes floatUp {
+      to { transform: translateY(-40px); opacity: 0; }
+    }
+
+    .life-bar {
+      display: flex;
+      gap: 4px;
+    }
+    .life-bar span { font-size: 1.1rem; }
+    .life-bar span.lost { opacity: 0.2; filter: grayscale(1); }
+
+    .level-badge {
+      background: rgba(255,107,157,0.25);
+      padding: 0.2rem 0.7rem;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      color: #ff9ec4;
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <div>得分 <strong id="score">0</strong></div>
+    <div class="level-badge">Lv.<span id="level">1</span></div>
+    <div class="life-bar" id="lives">❤️❤️❤️</div>
+    <div class="combo" id="combo"></div>
+  </div>
+
+  <div id="game">
+    <div id="stars"></div>
+    <div id="basket">🧺</div>
+
+    <div class="overlay" id="startScreen">
+      <div style="font-size:4rem;margin-bottom:0.5rem">💕</div>
+      <h1>接爱心大作战</h1>
+      <p>移动篮子接住掉下来的爱心 💖<br>接到炸弹 💣 或漏接爱心会扣命<br>连续接住可触发连击加分！</p>
+      <button class="btn" id="startBtn">开始游戏</button>
+      <p class="tips">电脑：← → 或 A D &nbsp;|&nbsp; 手机：拖动屏幕</p>
+    </div>
+
+    <div class="overlay hidden" id="gameOverScreen">
+      <div style="font-size:3.5rem;margin-bottom:0.5rem">😢</div>
+      <h1>游戏结束</h1>
+      <div class="final-score" id="finalScore">0</div>
+      <div class="rank" id="rank"></div>
+      <button class="btn" id="restartBtn">再来一局</button>
+    </div>
+  </div>
+
+  <script>
+    const game = document.getElementById('game');
+    const basket = document.getElementById('basket');
+    const scoreEl = document.getElementById('score');
+    const levelEl = document.getElementById('level');
+    const livesEl = document.getElementById('lives');
+    const comboEl = document.getElementById('combo');
+    const startScreen = document.getElementById('startScreen');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreEl = document.getElementById('finalScore');
+    const rankEl = document.getElementById('rank');
+
+    const HEARTS = ['💖', '💕', '💗', '💝', '❤️', '🩷'];
+    const RANKS = [
+      { min: 0,  text: '新手萌新 🌱' },
+      { min: 30, text: '恋爱学徒 📖' },
+      { min: 80, text: '甜蜜达人 🍬' },
+      { min: 150,text: '爱心收割机 🧺' },
+      { min: 250,text: '情圣本圣 👑' },
+      { min: 400,text: '宇宙级浪漫 🌌' },
+    ];
+
+    let W, H, basketX, score, lives, level, combo, comboTimer;
+    let items = [], running = false, lastSpawn = 0, animId;
+    let keys = { left: false, right: false };
+
+    function initStars() {
+      const box = document.getElementById('stars');
+      box.innerHTML = '';
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.opacity = 0.2 + Math.random() * 0.5;
+        box.appendChild(s);
+      }
+    }
+
+    function resize() {
+      W = game.clientWidth;
+      H = game.clientHeight;
+    }
+
+    function setBasketX(x) {
+      const half = 36;
+      basketX = Math.max(half, Math.min(W - half, x));
+      basket.style.left = basketX + 'px';
+    }
+
+    function updateLives() {
+      livesEl.innerHTML = '';
+      for (let i = 0; i < 3; i++) {
+        const s = document.createElement('span');
+        s.textContent = '❤️';
+        if (i >= lives) s.classList.add('lost');
+        livesEl.appendChild(s);
+      }
+    }
+
+    function spawnItem() {
+      const isBomb = Math.random() < 0.12 + level * 0.015;
+      const el = document.createElement('div');
+      el.className = 'item' + (isBomb ? ' bomb' : '');
+      el.textContent = isBomb ? '💣' : HEARTS[Math.floor(Math.random() * HEARTS.length)];
+      const size = isBomb ? 28 : 32;
+      const x = size + Math.random() * (W - size * 2);
+      el.style.left = x + 'px';
+      el.style.top = '-40px';
+      game.appendChild(el);
+      items.push({
+        el, x, y: -40,
+        speed: 2.2 + level * 0.35 + Math.random() * 0.8,
+        isBomb,
+        size,
+        caught: false,
+      });
+    }
+
+    function floatText(x, y, text, type) {
+      const el = document.createElement('div');
+      el.className = 'float-score ' + type;
+      el.textContent = text;
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      game.appendChild(el);
+      setTimeout(() => el.remove(), 800);
+    }
+
+    function addCombo() {
+      combo++;
+      clearTimeout(comboTimer);
+      if (combo >= 3) {
+        comboEl.textContent = `连击 x${combo} 🔥`;
+        comboEl.classList.add('show');
+      }
+      comboTimer = setTimeout(() => {
+        combo = 0;
+        comboEl.classList.remove('show');
+      }, 1500);
+    }
+
+    function breakCombo() {
+      combo = 0;
+      comboEl.classList.remove('show');
+    }
+
+    function catchItem(item) {
+      item.caught = true;
+      if (item.isBomb) {
+        lives--;
+        breakCombo();
+        floatText(item.x, H - 80, '-1 命', 'minus');
+        updateLives();
+        if (lives <= 0) endGame();
+      } else {
+        addCombo();
+        const bonus = combo >= 3 ? combo : 1;
+        const pts = 10 * bonus;
+        score += pts;
+        scoreEl.textContent = score;
+        floatText(item.x, H - 80, '+' + pts, 'plus');
+        const newLevel = Math.floor(score / 50) + 1;
+        if (newLevel > level) {
+          level = newLevel;
+          levelEl.textContent = level;
+        }
+      }
+      item.el.remove();
+    }
+
+    function missHeart(item) {
+      lives--;
+      breakCombo();
+      floatText(item.x, H - 20, '漏接了!', 'minus');
+      updateLives();
+      if (lives <= 0) endGame();
+    }
+
+    function tick(ts) {
+      if (!running) return;
+
+      const speed = keys.left ? -7 : keys.right ? 7 : 0;
+      if (speed) setBasketX(basketX + speed);
+
+      const spawnInterval = Math.max(500, 1100 - level * 60);
+      if (ts - lastSpawn > spawnInterval) {
+        spawnItem();
+        lastSpawn = ts;
+      }
+
+      const basketTop = H - 68;
+      const basketLeft = basketX - 36;
+      const basketRight = basketX + 36;
+
+      items = items.filter(item => {
+        item.y += item.speed;
+        item.el.style.top = item.y + 'px';
+
+        if (!item.caught && item.y + item.size >= basketTop && item.y <= H - 10) {
+          const itemCenter = item.x + item.size / 2;
+          if (itemCenter >= basketLeft && itemCenter <= basketRight) {
+            catchItem(item);
+            return false;
+          }
+        }
+
+        if (!item.caught && !item.isBomb && item.y > H) {
+          missHeart(item);
+          item.el.remove();
+          return false;
+        }
+
+        if (item.y > H + 20) {
+          item.el.remove();
+          return false;
+        }
+        return true;
+      });
+
+      animId = requestAnimationFrame(tick);
+    }
+
+    function startGame() {
+      resize();
+      items.forEach(i => i.el.remove());
+      items = [];
+      score = 0; lives = 3; level = 1; combo = 0;
+      scoreEl.textContent = '0';
+      levelEl.textContent = '1';
+      updateLives();
+      comboEl.classList.remove('show');
+      setBasketX(W / 2);
+      startScreen.classList.add('hidden');
+      gameOverScreen.classList.add('hidden');
+      running = true;
+      lastSpawn = performance.now();
+      cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(tick);
+    }
+
+    function endGame() {
+      running = false;
+      cancelAnimationFrame(animId);
+      finalScoreEl.textContent = score;
+      let rank = RANKS[0].text;
+      for (const r of RANKS) if (score >= r.min) rank = r.text;
+      rankEl.textContent = rank;
+      gameOverScreen.classList.remove('hidden');
+    }
+
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('restartBtn').addEventListener('click', startGame);
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+    });
+    document.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+    });
+
+    let touching = false;
+    game.addEventListener('touchstart', e => {
+      touching = true;
+      const rect = game.getBoundingClientRect();
+      setBasketX(e.touches[0].clientX - rect.left);
+      e.preventDefault();
+    }, { passive: false });
+    game.addEventListener('touchmove', e => {
+      if (!touching) return;
+      const rect = game.getBoundingClientRect();
+      setBasketX(e.touches[0].clientX - rect.left);
+      e.preventDefault();
+    }, { passive: false });
+    game.addEventListener('touchend', () => { touching = false; });
+
+    game.addEventListener('mousemove', e => {
+      if (!running) return;
+      const rect = game.getBoundingClientRect();
+      setBasketX(e.clientX - rect.left);
+    });
+
+    initStars();
+    resize();
+    setBasketX(210);
+    addEventListener('resize', () => { resize(); setBasketX(basketX || W / 2); });
+  </script>
+</body>
+</html>

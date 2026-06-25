@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>灵魂拷问 💕</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .hearts { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .heart {
+      position: absolute;
+      opacity: 0.12;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.93);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 20px 60px rgba(255, 105, 135, 0.25);
+      text-align: center;
+      max-width: 90vw;
+      width: 380px;
+      animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .progress {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ffd6e7;
+      transition: all 0.3s;
+    }
+    .dot.active { background: #e84393; transform: scale(1.2); }
+    .dot.done { background: #ff6b9d; }
+
+    .emoji { font-size: 3.5rem; margin-bottom: 0.8rem; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    h1 {
+      font-size: clamp(1.3rem, 4.5vw, 1.75rem);
+      color: #e84393;
+      margin-bottom: 0.4rem;
+    }
+    .subtitle { color: #999; font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      min-height: 52px;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s;
+    }
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6b9d, #e84393);
+      color: white;
+      box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4);
+      z-index: 2;
+      position: relative;
+    }
+    .btn-yes:hover { transform: scale(1.06); }
+
+    .btn-no {
+      position: fixed;
+      background: #eee;
+      color: #aaa;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 10;
+      transition: left 0.12s ease-out, top 0.12s ease-out;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; animation: popIn 0.4s ease; }
+
+    .result { display: none; }
+    .result.show { display: block; animation: popIn 0.5s ease; }
+    .result h2 { font-size: 1.6rem; color: #e84393; margin-bottom: 0.8rem; }
+    .result p { color: #666; line-height: 1.7; }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 100;
+      animation: fall 3s linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    .taunt {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.85);
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #e84393;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .taunt.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+  <div class="taunt" id="taunt"></div>
+
+  <div class="card">
+    <div class="progress" id="progress"></div>
+
+    <div id="steps"></div>
+
+    <div class="result" id="result">
+      <div class="emoji">🥰</div>
+      <h2>全票通过！</h2>
+      <p>你每一个「Yes」我都记在心里了<br>以后也请多多喜欢我哦 💕</p>
+    </div>
+  </div>
+
+  <button class="btn btn-no" id="btnNo">No</button>
+
+  <script>
+    const STEPS = [
+      { emoji: '😊', q: '你喜欢我吗？', sub: '第一关，很简单的吧～', yes: '当然！' },
+      { emoji: '🥺', q: '你想我吗？', sub: '不许敷衍哦', yes: '想！' },
+      { emoji: '💗', q: '我生气的时候你也爱我吗？', sub: '……这题有点难', yes: '爱！' },
+      { emoji: '💍', q: '要和我一直在一起吗？', sub: '最后一关了！', yes: '愿意！' },
+    ];
+
+    const TAUNTS = [
+      '抓不到我吧～', 'No 按钮今天请假了', '再试试？', '嘿嘿 😜',
+      '你的手速不够哦', '放弃吧，你注定要点 Yes', 'No 已离线'
+    ];
+
+    const btnNo = document.getElementById('btnNo');
+    const stepsEl = document.getElementById('steps');
+    const progressEl = document.getElementById('progress');
+    const result = document.getElementById('result');
+    const taunt = document.getElementById('taunt');
+
+    let current = 0;
+    let mouseX = innerWidth / 2, mouseY = innerHeight / 2;
+    let noX = 0, noY = 0;
+    let dodgeCount = 0;
+
+    const SAFE = 110;
+    const SPEED = 1.3;
+
+    STEPS.forEach((s, i) => {
+      progressEl.innerHTML += `<div class="dot${i === 0 ? ' active' : ''}" data-i="${i}"></div>`;
+      stepsEl.innerHTML += `
+        <div class="step${i === 0 ? ' active' : ''}" data-step="${i}">
+          <div class="emoji">${s.emoji}</div>
+          <h1>${s.q}</h1>
+          <p class="subtitle">${s.sub}</p>
+          <div class="buttons">
+            <button class="btn btn-yes" data-step="${i}">${s.yes}</button>
+          </div>
+        </div>`;
+    });
+
+    function placeNoNearYes() {
+      const yes = document.querySelector('.step.active .btn-yes');
+      if (!yes) return;
+      const r = yes.getBoundingClientRect();
+      noX = r.right + 20;
+      noY = r.top;
+      btnNo.style.display = 'block';
+      btnNo.style.left = noX + 'px';
+      btnNo.style.top = noY + 'px';
+    }
+
+    function moveNoAway() {
+      const rect = btnNo.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = cx - mouseX, dy = cy - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < SAFE && dist > 0) {
+        const force = (SAFE - dist) / SAFE;
+        noX += (dx / dist) * force * SPEED * 42;
+        noY += (dy / dist) * force * SPEED * 42;
+        const pad = 8;
+        noX = Math.max(pad, Math.min(noX, innerWidth - rect.width - pad));
+        noY = Math.max(pad, Math.min(noY, innerHeight - rect.height - pad));
+        btnNo.style.left = noX + 'px';
+        btnNo.style.top = noY + 'px';
+        dodgeCount++;
+        if (dodgeCount % 8 === 0) showTaunt();
+      }
+    }
+
+    function showTaunt() {
+      taunt.textContent = TAUNTS[Math.floor(Math.random() * TAUNTS.length)];
+      taunt.classList.add('show');
+      setTimeout(() => taunt.classList.remove('show'), 2000);
+    }
+
+    function nextStep() {
+      document.querySelector(`.step[data-step="${current}"]`).classList.remove('active');
+      document.querySelector(`.dot[data-i="${current}"]`).classList.replace('active', 'done');
+      current++;
+      if (current >= STEPS.length) {
+        btnNo.style.display = 'none';
+        result.classList.add('show');
+        progressEl.style.display = 'none';
+        confetti();
+        return;
+      }
+      document.querySelector(`.step[data-step="${current}"]`).classList.add('active');
+      document.querySelector(`.dot[data-i="${current}"]`).classList.add('active');
+      setTimeout(placeNoNearYes, 80);
+    }
+
+    document.querySelectorAll('.btn-yes').forEach(btn => {
+      btn.addEventListener('click', nextStep);
+    });
+
+    btnNo.addEventListener('click', e => {
+      e.preventDefault();
+      const a = Math.random() * Math.PI * 2;
+      noX += Math.cos(a) * 100;
+      noY += Math.sin(a) * 100;
+      moveNoAway();
+      showTaunt();
+    });
+
+    document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; moveNoAway(); });
+    document.addEventListener('touchmove', e => {
+      if (e.touches[0]) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; moveNoAway(); }
+    }, { passive: true });
+
+    function confetti() {
+      const colors = ['#ff6b9d','#e84393','#fdcb6e','#a29bfe','#74b9ff'];
+      for (let i = 0; i < 70; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'confetti';
+          el.style.left = Math.random() * 100 + 'vw';
+          el.style.background = colors[i % colors.length];
+          el.style.animationDuration = (2 + Math.random() * 2) + 's';
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 4000);
+        }, i * 25);
+      }
+    }
+
+    const hc = document.getElementById('hearts');
+    for (let i = 0; i < 12; i++) {
+      const h = document.createElement('span');
+      h.className = 'heart';
+      h.textContent = '♥';
+      h.style.left = Math.random() * 100 + '%';
+      h.style.top = Math.random() * 100 + '%';
+      h.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+      h.style.animationDelay = Math.random() * 5 + 's';
+      hc.appendChild(h);
+    }
+
+    addEventListener('load', () => setTimeout(placeNoNearYes, 150));
+    addEventListener('resize', placeNoNearYes);
+  </script>
+</body>
+</html>

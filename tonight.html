@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今晚陪我吗？</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      overflow: hidden;
+      user-select: none;
+    }
+    .stars { position: fixed; inset: 0; pointer-events: none; }
+    .star {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    .moon {
+      position: fixed;
+      top: 8%;
+      right: 12%;
+      font-size: 3rem;
+      opacity: 0.9;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      max-width: 90vw;
+      z-index: 1;
+      animation: fadeUp 0.6s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+    }
+    .emoji { font-size: 3.5rem; margin-bottom: 1rem; }
+    h1 { color: #fff; font-size: clamp(1.4rem,5vw,1.9rem); margin-bottom: 0.5rem; }
+    .sub { color: rgba(255,255,255,0.55); margin-bottom: 2.5rem; }
+    .buttons { display: flex; gap: 1.2rem; justify-content: center; min-height: 50px; }
+    .btn {
+      padding: 0.85rem 2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-yes {
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      color: #1a1a2e;
+      box-shadow: 0 6px 24px rgba(255,210,0,0.35);
+      transition: transform 0.2s;
+    }
+    .btn-yes:hover { transform: scale(1.06); }
+    .btn-no {
+      position: fixed;
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.2);
+      z-index: 10;
+      transition: left 0.12s, top 0.12s;
+    }
+    .result { display: none; }
+    .result.show { display: block; animation: fadeUp 0.5s ease; }
+    .result h2 { color: #ffd200; font-size: 1.6rem; margin: 1rem 0; }
+    .result p { color: rgba(255,255,255,0.7); line-height: 1.8; }
+    .firefly {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: #ffd200;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #ffd200;
+      pointer-events: none;
+      animation: fly 4s ease-in-out infinite;
+    }
+    @keyframes fly {
+      0%, 100% { transform: translate(0,0); opacity: 0.6; }
+      50% { transform: translate(30px,-40px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="moon">🌙</div>
+
+  <div class="card">
+    <div id="q">
+      <div class="emoji">🌃</div>
+      <h1>今晚陪我吗？</h1>
+      <p class="sub">聊聊天、看看剧、或者什么都不做也好</p>
+      <div class="buttons">
+        <button class="btn btn-yes" id="yes">好呀 ✨</button>
+        <button class="btn btn-no" id="no">不了</button>
+      </div>
+    </div>
+    <div class="result" id="result">
+      <div class="emoji">🤗</div>
+      <h2>那说定了！</h2>
+      <p>今晚的月亮分你一半<br>记得来找我哦 🌙</p>
+    </div>
+  </div>
+
+  <script>
+    const no = document.getElementById('no');
+    const yes = document.getElementById('yes');
+    let mx = innerWidth/2, my = innerHeight/2, nx, ny;
+
+    for (let i = 0; i < 60; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random()*100+'%';
+      s.style.top = Math.random()*100+'%';
+      s.style.animationDelay = Math.random()*3+'s';
+      document.getElementById('stars').appendChild(s);
+    }
+
+    function init() {
+      const y = yes.getBoundingClientRect();
+      nx = y.right + 16; ny = y.top;
+      no.style.left = nx+'px'; no.style.top = ny+'px';
+    }
+
+    function dodge() {
+      const r = no.getBoundingClientRect();
+      const cx = r.left+r.width/2, cy = r.top+r.height/2;
+      const dx = cx-mx, dy = cy-my, d = Math.hypot(dx,dy);
+      if (d < 120 && d > 0) {
+        const f = (120-d)/120;
+        nx += dx/d*f*45; ny += dy/d*f*45;
+        nx = Math.max(5, Math.min(nx, innerWidth-r.width-5));
+        ny = Math.max(5, Math.min(ny, innerHeight-r.height-5));
+        no.style.left = nx+'px'; no.style.top = ny+'px';
+      }
+    }
+
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dodge(); });
+    document.addEventListener('touchmove', e => {
+      if (e.touches[0]) { mx=e.touches[0].clientX; my=e.touches[0].clientY; dodge(); }
+    }, { passive: true });
+
+    no.addEventListener('click', e => {
+      e.preventDefault();
+      const a = Math.random()*6.28;
+      nx += Math.cos(a)*85; ny += Math.sin(a)*85;
+      dodge();
+    });
+
+    yes.addEventListener('click', () => {
+      document.getElementById('q').style.display = 'none';
+      document.getElementById('result').classList.add('show');
+      no.style.display = 'none';
+      for (let i = 0; i < 12; i++) {
+        const f = document.createElement('div');
+        f.className = 'firefly';
+        f.style.left = Math.random()*100+'vw';
+        f.style.top = (50+Math.random()*40)+'vh';
+        f.style.animationDelay = Math.random()*2+'s';
+        document.body.appendChild(f);
+      }
+    });
+
+    addEventListener('load', () => setTimeout(init, 100));
+    addEventListener('resize', init);
+  </script>
+</body>
+</html>
